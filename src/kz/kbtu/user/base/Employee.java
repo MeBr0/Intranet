@@ -1,4 +1,4 @@
-package kz.kbtu.user;
+package kz.kbtu.user.base;
 
 import java.util.Date;
 

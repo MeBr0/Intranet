@@ -1,4 +1,4 @@
-package kz.kbtu.user;
+package kz.kbtu.user.base;
 
 import java.util.Date;
 
@@ -8,11 +8,10 @@ public abstract class User extends Person {
     private String phoneNumber;
     private String email;
 
-    public User(String login, String password, String firstName, String lastName, Date birthDate, Gender gender) {
-        super(firstName, lastName, birthDate, gender);
+    public User(String login, String firstName, String lastName) {
+        super(firstName, lastName);
 
         this.login = login;
-        this.password = password;
     }
 
     public String getLogin() {

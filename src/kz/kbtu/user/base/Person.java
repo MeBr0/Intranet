@@ -1,4 +1,4 @@
-package kz.kbtu.user;
+package kz.kbtu.user.base;
 
 import java.util.Date;
 import java.util.Objects;
@@ -9,11 +9,9 @@ public abstract class Person {
     private Date birthDate;
     private Gender gender;
 
-    public Person(String firstName, String lastName, Date birthDate, Gender gender) {
+    public Person(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.birthDate = birthDate;
-        this.gender = gender;
     }
 
     public String getFirstName() {
