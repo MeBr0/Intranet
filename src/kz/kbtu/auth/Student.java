@@ -1,10 +1,10 @@
-package kz.kbtu.user;
+package kz.kbtu.auth;
 
-import kz.kbtu.user.base.Gender;
-import kz.kbtu.user.base.User;
+import kz.kbtu.auth.base.User;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Student extends User {
 
@@ -62,5 +62,35 @@ public class Student extends User {
 
     public void setDegree(Degree degree) {
         this.degree = degree;
+    }
+
+    @Override
+    public String toString() {
+        return "Student{" +
+                "id='" + id + '\'' +
+                ", yearOfStudy=" + yearOfStudy +
+                ", courses=" + courses +
+                ", gpa=" + gpa +
+                ", faculty=" + faculty +
+                ", degree=" + degree +
+                "} " + super.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Student)) return false;
+        if (!super.equals(o)) return false;
+        Student student = (Student) o;
+        return yearOfStudy == student.yearOfStudy &&
+                Double.compare(student.gpa, gpa) == 0 &&
+                courses.equals(student.courses) &&
+                faculty == student.faculty &&
+                degree == student.degree;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), yearOfStudy, courses, gpa, faculty, degree);
     }
 }

@@ -1,12 +1,16 @@
-package kz.kbtu.user.base;
+package kz.kbtu.auth.base;
 
-import java.util.Date;
+import java.util.Objects;
 
 public abstract class User extends Person {
     private String login;
     private String password;
     private String phoneNumber;
     private String email;
+
+    {
+        this.password = "Kbtu111";
+    }
 
     public User(String login, String firstName, String lastName) {
         super(firstName, lastName);
@@ -40,11 +44,28 @@ public abstract class User extends Person {
 
     @Override
     public String toString() {
-        return "User {" +
+        return "User{" +
                 "login='" + login + '\'' +
                 ", password='" + password + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", email='" + email + '\'' +
                 "} " + super.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+        if (!super.equals(o)) return false;
+        User user = (User) o;
+        return login.equals(user.login) &&
+                password.equals(user.password) &&
+                Objects.equals(phoneNumber, user.phoneNumber) &&
+                Objects.equals(email, user.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), login, password, phoneNumber, email);
     }
 }

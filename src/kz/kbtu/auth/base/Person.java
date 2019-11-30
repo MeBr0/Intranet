@@ -1,4 +1,4 @@
-package kz.kbtu.user.base;
+package kz.kbtu.auth.base;
 
 import java.util.Date;
 import java.util.Objects;
@@ -61,8 +61,8 @@ public abstract class Person {
         if (this == o) return true;
         if (!(o instanceof Person)) return false;
         Person person = (Person) o;
-        return Objects.equals(firstName, person.firstName) &&
-                Objects.equals(lastName, person.lastName) &&
+        return firstName.equals(person.firstName) &&
+                lastName.equals(person.lastName) &&
                 Objects.equals(birthDate, person.birthDate) &&
                 gender == person.gender;
     }

@@ -1,13 +1,12 @@
-package kz.kbtu.user.base;
+package kz.kbtu.auth.base;
 
 import java.util.Date;
 
 public abstract class Employee extends User {
     private int salary;
 
-    public Employee(int salary, String login, String password, String firstName, String lastName, Date birthDate,
-                    Gender gender) {
-        super(login, password, firstName, lastName, birthDate, gender);
+    public Employee(int salary, String login, String firstName, String lastName) {
+        super(login, firstName, lastName);
 
         this.salary = salary;
     }

@@ -1,4 +1,4 @@
-package kz.kbtu.user;
+package kz.kbtu.auth;
 
 public enum Faculty {
     FIT,
