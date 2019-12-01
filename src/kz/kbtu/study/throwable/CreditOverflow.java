@@ -1,6 +1,6 @@
 package kz.kbtu.study.throwable;
 
-import kz.kbtu.study.Course;
+import kz.kbtu.study.course.Course;
 
 public class CreditOverflow extends Exception {
 

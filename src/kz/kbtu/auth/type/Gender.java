@@ -1,4 +1,4 @@
-package kz.kbtu.auth.base;
+package kz.kbtu.auth.type;
 
 public enum Gender {
     MALE,

@@ -1,6 +1,7 @@
-package kz.kbtu.message;
+package kz.kbtu.communication.order;
 
 import kz.kbtu.auth.base.Employee;
+import kz.kbtu.communication.message.Message;
 
 import java.util.Date;
 import java.util.Objects;

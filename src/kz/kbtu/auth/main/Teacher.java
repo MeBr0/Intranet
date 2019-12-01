@@ -1,10 +1,12 @@
-package kz.kbtu.auth;
+package kz.kbtu.auth.main;
 
 import kz.kbtu.auth.base.Employee;
-import kz.kbtu.message.ManagingNews;
-import kz.kbtu.message.News;
-import kz.kbtu.study.Course;
-import kz.kbtu.study.ManagingCourses;
+import kz.kbtu.auth.type.Faculty;
+import kz.kbtu.auth.type.TeacherPosition;
+import kz.kbtu.communication.news.ManagingNews;
+import kz.kbtu.communication.news.News;
+import kz.kbtu.study.course.Course;
+import kz.kbtu.study.course.ManagingCourses;
 
 import java.util.*;
 

@@ -1,4 +1,4 @@
-package kz.kbtu.message;
+package kz.kbtu.communication.message;
 
 import java.util.List;
 

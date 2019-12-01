@@ -1,8 +1,10 @@
-package kz.kbtu.auth;
+package kz.kbtu.auth.main;
 
 import kz.kbtu.auth.base.User;
-import kz.kbtu.study.Course;
-import kz.kbtu.study.ManagingCourses;
+import kz.kbtu.auth.type.Degree;
+import kz.kbtu.auth.type.Faculty;
+import kz.kbtu.study.course.Course;
+import kz.kbtu.study.course.ManagingCourses;
 import kz.kbtu.study.throwable.CreditOverflow;
 
 import java.util.ArrayList;

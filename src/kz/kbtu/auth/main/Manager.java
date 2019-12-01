@@ -1,8 +1,9 @@
-package kz.kbtu.auth;
+package kz.kbtu.auth.main;
 
 import kz.kbtu.auth.base.Employee;
-import kz.kbtu.message.ManagingNews;
-import kz.kbtu.message.News;
+import kz.kbtu.auth.type.Faculty;
+import kz.kbtu.communication.news.ManagingNews;
+import kz.kbtu.communication.news.News;
 
 import java.util.Calendar;
 import java.util.Date;

@@ -1,7 +1,9 @@
-package kz.kbtu.study;
+package kz.kbtu.study.course;
 
-import kz.kbtu.auth.Student;
-import kz.kbtu.auth.Teacher;
+import kz.kbtu.auth.main.Student;
+import kz.kbtu.auth.main.Teacher;
+import kz.kbtu.study.File;
+import kz.kbtu.study.Marks;
 
 import java.util.ArrayList;
 import java.util.HashMap;

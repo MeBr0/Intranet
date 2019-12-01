@@ -1,4 +1,4 @@
-package kz.kbtu.message;
+package kz.kbtu.communication.order;
 
 import java.util.List;
 

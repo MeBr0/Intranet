@@ -1,9 +1,9 @@
-package kz.kbtu.auth;
+package kz.kbtu.auth.main;
 
 import kz.kbtu.auth.base.Employee;
-import kz.kbtu.message.ManagingOrders;
-import kz.kbtu.message.Order;
-import kz.kbtu.message.OrderStatus;
+import kz.kbtu.communication.order.ManagingOrders;
+import kz.kbtu.communication.order.Order;
+import kz.kbtu.communication.order.OrderStatus;
 
 import java.util.ArrayList;
 import java.util.List;

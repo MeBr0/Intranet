@@ -1,4 +1,4 @@
-package kz.kbtu.auth;
+package kz.kbtu.auth.type;
 
 public enum TeacherPosition {
     TUTOR,

@@ -1,4 +1,4 @@
-package kz.kbtu.message;
+package kz.kbtu.communication.message;
 
 import kz.kbtu.auth.base.Employee;
 

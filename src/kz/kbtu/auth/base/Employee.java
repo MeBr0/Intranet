@@ -1,7 +1,7 @@
 package kz.kbtu.auth.base;
 
-import kz.kbtu.message.Message;
-import kz.kbtu.message.Messaging;
+import kz.kbtu.communication.message.Message;
+import kz.kbtu.communication.message.Messaging;
 
 import java.util.*;
 

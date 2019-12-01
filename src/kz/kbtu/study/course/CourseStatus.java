@@ -1,4 +1,4 @@
-package kz.kbtu.study;
+package kz.kbtu.study.course;
 
 public enum CourseStatus {
     FINISHED,

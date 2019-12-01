@@ -1,5 +1,7 @@
 package kz.kbtu.auth.base;
 
+import kz.kbtu.auth.type.Gender;
+
 import java.util.Date;
 import java.util.Objects;
 
