@@ -49,12 +49,7 @@ public abstract class User extends Person implements Serializable {
 
     @Override
     public String toString() {
-        return "User{" +
-                "login='" + login + '\'' +
-                ", password='" + password + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", email='" + email + '\'' +
-                "} " + super.toString();
+        return String.format("login: %s, %s", login, super.toString());
     }
 
     @Override

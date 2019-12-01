@@ -76,10 +76,7 @@ public class Teacher extends Employee implements ManagingCourses, ManagingNews, 
 
     @Override
     public String toString() {
-        return "Teacher{" +
-                "faculty=" + faculty +
-                ", position=" + position +
-                '}';
+        return String.format("Teacher { faculty: %s, position: %s, %s }", faculty, position, super.toString());
     }
 
     @Override

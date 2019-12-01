@@ -55,12 +55,7 @@ public abstract class Person implements Serializable {
 
     @Override
     public String toString() {
-        return "Person {" +
-                "firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", birthDate=" + birthDate +
-                ", gender=" + gender +
-                " }";
+        return String.format("firstName: %s, lastName: %s", firstName, lastName);
     }
 
     @Override

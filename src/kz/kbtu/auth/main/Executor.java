@@ -69,6 +69,6 @@ public class Executor extends Employee implements ManagingOrders, Serializable {
 
     @Override
     public String toString() {
-        return "Executor{} " + super.toString();
+        return String.format("Executor: { %s }", super.toString());
     }
 }

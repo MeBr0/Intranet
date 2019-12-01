@@ -108,13 +108,8 @@ public class Student extends User implements ManagingCourses, Serializable {
 
     @Override
     public String toString() {
-        return "Student{" +
-                "id='" + id + '\'' +
-                ", yearOfStudy=" + yearOfStudy +
-                ", gpa=" + gpa +
-                ", faculty=" + faculty +
-                ", degree=" + degree +
-                "} " + super.toString();
+        return String.format("Student: { id: %s, yearOfStudy: %d, gpa: %.2f, faculty: %s, degree: %s, %s }",
+                id, yearOfStudy, gpa, faculty, degree, super.toString());
     }
 
     @Override

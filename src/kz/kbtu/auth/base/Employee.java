@@ -58,9 +58,7 @@ public abstract class Employee extends User implements Messaging, Serializable {
 
     @Override
     public String toString() {
-        return "Employee{" +
-                "salary=" + salary +
-                "} " + super.toString();
+        return String.format("salary: %d, %s", salary, super.toString());
     }
 
     @Override

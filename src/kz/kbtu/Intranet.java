@@ -38,6 +38,9 @@ public class Intranet {
             System.out.println("Enter login please!");
             String login = SCANNER.nextLine();
 
+            if (login.equals(BACK))
+                break;
+
             System.out.println("Enter password please!");
             String password = SCANNER.nextLine();
 
@@ -126,6 +129,8 @@ public class Intranet {
                     break;
             }
         }
+
+        database.save();
     }
 
     private void adminAddStudent(Admin admin) {
@@ -301,6 +306,8 @@ public class Intranet {
                 System.out.println("Cannot find such login!");
             }
         }
+
+        database.save();
     }
 
     /* Admin - show */

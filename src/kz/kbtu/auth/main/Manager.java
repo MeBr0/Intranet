@@ -32,4 +32,13 @@ public class Manager extends Employee implements ManagingNews, Serializable {
 
         return new News(this.faculty ,title, text, this, timestamp);
     }
+
+    @Override
+    public String toString() {
+//        return "Manager{" +
+//                "faculty=" + faculty +
+//                "} " + super.toString();
+
+        return String.format("Manager { faculty: %s, %s}", faculty, super.toString());
+    }
 }

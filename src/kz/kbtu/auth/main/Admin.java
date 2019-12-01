@@ -37,4 +37,9 @@ public class Admin extends User implements Serializable {
                                  String lastName) {
         return new Teacher(faculty, position, salary, login, firstName, lastName);
     }
+
+    @Override
+    public String toString() {
+        return String.format("Admin: { %s }", super.toString());
+    }
 }
