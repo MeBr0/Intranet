@@ -107,4 +107,9 @@ public class Course implements Serializable {
     public void setStatuses(Map<String, CourseStatus> statuses) {
         this.statuses = statuses;
     }
+
+    @Override
+    public String toString() {
+        return String.format("Course { name: %s, creditNumber: %d, teacher: %s", name, creditNumber, teacher);
+    }
 }

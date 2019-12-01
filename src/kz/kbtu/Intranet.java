@@ -5,6 +5,7 @@ import kz.kbtu.auth.main.*;
 import kz.kbtu.auth.type.Degree;
 import kz.kbtu.auth.type.Faculty;
 import kz.kbtu.auth.type.TeacherPosition;
+import kz.kbtu.study.course.Course;
 import kz.kbtu.util.Logger;
 
 import java.util.ArrayList;
@@ -21,14 +22,13 @@ public class Intranet {
 
     {
         database = new Database();
-        database.load();
 
         SCANNER = new Scanner(System.in);
         LOGGER = new Logger();
     }
 
     public void begin() {
-//        database.save();
+        database.save();
         System.out.println(database.getUsers());
         System.out.println("Welcome to Intranet system!");
 
@@ -66,8 +66,12 @@ public class Intranet {
         if (user instanceof Admin) {
             adminSession((Admin) user);
         }
+        else if (user instanceof ORManager) {
+            orManagerSession((ORManager) user);
+        }
     }
 
+    /* Admin */
     private void adminSession(Admin admin) {
         LOGGER.enterAdmin(admin);
 
@@ -303,7 +307,7 @@ public class Intranet {
                 LOGGER.removeUser(admin, result);
             }
             else {
-                System.out.println("Cannot find such login!");
+                System.out.println("Cannot find such user!");
             }
         }
 
@@ -354,6 +358,93 @@ public class Intranet {
             for (User user: users) {
                 System.out.println(user);
             }
+        }
+    }
+
+    /* ORManager */
+    private void orManagerSession(ORManager manager) {
+        String answer = "";
+
+        while (!answer.equals(BACK)) {
+            System.out.println("1. Add course");
+            System.out.println("2. Remove course");
+            System.out.println("3. Show course");
+
+            answer = SCANNER.nextLine();
+
+            switch (answer) {
+                case "1":
+                    orManagerAdd(manager);
+                    break;
+                case "2":
+                    orManagerRemove(manager);
+                    break;
+                case "3":
+                    orManagerShow();
+                    break;
+            }
+        }
+    }
+
+    private void orManagerAdd(ORManager manager) {
+        System.out.println("Type name of course!");
+        String name = SCANNER.nextLine();
+
+        System.out.println("Type login of teacher of course!");
+        String login = SCANNER.nextLine();
+
+        System.out.println("Type credit number of course!");
+        int creditNumber = SCANNER.nextInt();
+
+        User user = database.getUser(login);
+
+        if (user instanceof Teacher) {
+            Teacher teacher = (Teacher) user;
+
+            Course course = manager.createCourse(name, creditNumber, teacher);
+            database.addCourse(course);
+
+            LOGGER.createCourse(manager, course);
+            System.out.println("Course created!");
+        }
+        else {
+            System.err.println("Cannot create Course!");
+        }
+    }
+
+    private void orManagerRemove(ORManager manager) {
+        String answer = "";
+
+        while (!answer.equals(BACK)) {
+            System.out.println("Write name of course to remove!");
+
+            answer = SCANNER.nextLine();
+
+            Course result = database.removeCourse(answer);
+
+            if (result != null) {
+                System.out.println("Course removed!");
+                LOGGER.removeCourse(manager, result);
+            }
+            else {
+                System.out.println("Cannot find such course!");
+            }
+        }
+
+        database.save();
+    }
+
+    private void orManagerShow() {
+        List<Course> courses = database.getCourses();
+
+        String answer = "";
+
+        while (!answer.equals(BACK)) {
+            for (int i = 0; i < courses.size(); ++i) {
+                System.out.println(i+1 + ". " + courses.get(i));
+            }
+
+            answer = SCANNER.nextLine();
         }
     }
 }

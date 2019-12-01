@@ -23,9 +23,7 @@ public class Database {
     private final String NEWS = "news.out";
 
     {
-        users = new ArrayList<>();
-        courses = new ArrayList<>();
-        news = new ArrayList<>();
+        load();
 
 //        Admin admin = Admin.createAdmin("admin", "", "");
 //        users.add(admin);
@@ -37,6 +35,22 @@ public class Database {
 
     public List<Course> getCourses() {
         return courses;
+    }
+
+    public void addCourse(Course course) {
+        this.courses.add(course);
+    }
+
+    public Course removeCourse(String name) {
+        for (Course course: courses) {
+            if (course.getName().equals(name)) {
+                courses.remove(course);
+
+                return course;
+            }
+        }
+
+        return null;
     }
 
     public List<News> getNews() {
@@ -52,6 +66,16 @@ public class Database {
             if (user.getLogin().equals(login)) {
                 users.remove(user);
 
+                return user;
+            }
+        }
+
+        return null;
+    }
+
+    public User getUser(String login) {
+        for (User user: users) {
+            if (user.getLogin().equals(login)) {
                 return user;
             }
         }
@@ -95,10 +119,14 @@ public class Database {
     }
     public void load() {
         loadUsers();
+        loadCourses();
+        loadNews();
     }
 
     public void save() {
         saveUsers();
+        saveCourses();
+        saveNews();
     }
 
     private void loadUsers() {
@@ -106,9 +134,11 @@ public class Database {
             users = (ArrayList<User>) ois.readObject();
         }
         catch (ClassNotFoundException e) {
+            users = new ArrayList<>();
             System.out.println(USER + ": ClassNotFoundException");
         }
         catch (IOException e) {
+            users = new ArrayList<>();
             System.out.println(USER + ": IOException");
         }
     }
@@ -118,9 +148,11 @@ public class Database {
             courses = (ArrayList<Course>) ois.readObject();
         }
         catch (ClassNotFoundException e) {
+            courses = new ArrayList<>();
             System.out.println(COURSE + ": ClassNotFoundException");
         }
         catch (IOException e) {
+            courses = new ArrayList<>();
             System.out.println(COURSE + ": IOException");
         }
     }
@@ -130,9 +162,11 @@ public class Database {
             news = (ArrayList<News>) ois.readObject();
         }
         catch (ClassNotFoundException e) {
+            news = new ArrayList<>();
             System.out.println(NEWS + ": ClassNotFoundException");
         }
         catch (IOException e) {
+            news = new ArrayList<>();
             System.out.println(NEWS + ": IOException");
         }
     }

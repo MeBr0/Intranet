@@ -2,6 +2,8 @@ package kz.kbtu.util;
 
 import kz.kbtu.auth.base.User;
 import kz.kbtu.auth.main.Admin;
+import kz.kbtu.auth.main.ORManager;
+import kz.kbtu.study.course.Course;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -41,6 +43,30 @@ public class Logger {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(LOG, true))) {
             writer.write(FORMAT.format(LocalDateTime.now()) + " - Admin " + admin.getLogin() +
                     " removed " + user.getClass().getSimpleName() + " " + user.getLogin() +  "\n");
+
+            writer.flush();
+        }
+        catch (IOException e) {
+            System.err.println("Cannot write in removeUser()");
+        }
+    }
+
+    public void createCourse(ORManager manager, Course course) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(LOG, true))) {
+            writer.write(FORMAT.format(LocalDateTime.now()) + " - ORManager " + manager.getLogin() +
+                    " created Course " + course.getName() +  "\n");
+
+            writer.flush();
+        }
+        catch (IOException e) {
+            System.err.println("Cannot write in createCourse()");
+        }
+    }
+
+    public void removeCourse(ORManager manager, Course course) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(LOG, true))) {
+            writer.write(FORMAT.format(LocalDateTime.now()) + " - ORManager " + manager.getLogin() +
+                    " removed Course " + course.getName() +  "\n");
 
             writer.flush();
         }
