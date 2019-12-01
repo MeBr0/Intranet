@@ -1,19 +1,24 @@
 package kz.kbtu.auth;
 
 import kz.kbtu.auth.base.User;
+import kz.kbtu.study.Course;
+import kz.kbtu.study.ManagingCourses;
+import kz.kbtu.study.throwable.CreditOverflow;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class Student extends User {
+public class Student extends User implements ManagingCourses {
 
     private final String id;
     private int yearOfStudy;
-    private List<String> courses;
+    private List<Course> courses;
     private double gpa;
     private Faculty faculty;
     private Degree degree;
+
+    private final int CREDIT_LIMIT = 21;
 
     private static int count = 0;
 
@@ -65,11 +70,44 @@ public class Student extends User {
     }
 
     @Override
+    public List<Course> getCourses() {
+        return this.courses;
+    }
+
+    @Override
+    public void addCourse(Course course) throws CreditOverflow {
+        int currentCredits = 0;
+
+        for (Course course1 : courses) {
+            currentCredits += course1.getCreditNumber();
+        }
+
+        if (currentCredits + course.getCreditNumber() <= CREDIT_LIMIT) {
+            this.courses.add(course);
+        }
+        else {
+            throw new CreditOverflow(course, CREDIT_LIMIT);
+        }
+    }
+
+    @Override
+    public boolean removeCourse(String name) {
+        for (Course course: this.courses) {
+            if (course.getName().equals(name)) {
+                courses.remove(course);
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    @Override
     public String toString() {
         return "Student{" +
                 "id='" + id + '\'' +
                 ", yearOfStudy=" + yearOfStudy +
-                ", courses=" + courses +
                 ", gpa=" + gpa +
                 ", faculty=" + faculty +
                 ", degree=" + degree +

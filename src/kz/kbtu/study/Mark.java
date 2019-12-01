@@ -24,7 +24,7 @@ public class Mark {
             this.score += delta;
         }
         else {
-            throw new DeadlinePassed(String.format("It is too late for %s", deadline.toString()));
+            throw new DeadlinePassed(deadline);
         }
     }
 

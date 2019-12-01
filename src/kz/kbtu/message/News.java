@@ -9,7 +9,7 @@ import java.util.Objects;
 public class News extends Message {
     private Faculty faculty;
 
-    public News(String title, String text, Employee sender, Date timestamp, Faculty faculty) {
+    public News(Faculty faculty, String title, String text, Employee sender, Date timestamp) {
         super(title, text, sender, timestamp);
 
         this.faculty = faculty;
