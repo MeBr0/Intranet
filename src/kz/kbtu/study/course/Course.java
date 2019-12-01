@@ -96,16 +96,29 @@ public class Course implements Serializable {
         return marks;
     }
 
-    public void setMarks(Map<String, Marks> marks) {
-        this.marks = marks;
+    public Marks getMarks(String login) {
+        return marks.get(login);
+    }
+
+    public void openMarks(String login) {
+        marks.put(login, new Marks());
     }
 
     public Map<String, CourseStatus> getStatuses() {
         return statuses;
     }
 
-    public void setStatuses(Map<String, CourseStatus> statuses) {
-        this.statuses = statuses;
+    public CourseStatus getStatus(String login) {
+        return this.statuses.get(login);
+    }
+
+    public void updateStatus(String login, CourseStatus status) {
+        if (this.statuses.get(login) == null) {
+            this.statuses.put(login, status);
+        }
+        else {
+            this.statuses.replace(login, status);
+        }
     }
 
     @Override

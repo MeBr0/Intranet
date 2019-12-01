@@ -1,5 +1,6 @@
 package kz.kbtu.study;
 
+import kz.kbtu.Database;
 import kz.kbtu.study.throwable.DeadlinePassed;
 
 import java.io.Serializable;
@@ -11,10 +12,10 @@ public class Marks implements Serializable {
     private Mark attestation2;
     private Mark finale;
 
-    public Marks(Date deadline1, Date deadline2, Date deadline3) {
-        attestation1 = new Mark(deadline1);
-        attestation2 = new Mark(deadline2);
-        finale = new Mark(deadline3);
+    public Marks() {
+        attestation1 = new Mark((Date) Database.DEADLINE1.clone());
+        attestation2 = new Mark((Date) Database.DEADLINE2.clone());
+        finale = new Mark((Date) Database.DEADLINE3.clone());
     }
 
     public Mark getAttestation1() {

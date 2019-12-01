@@ -4,6 +4,7 @@ import kz.kbtu.auth.base.User;
 import kz.kbtu.auth.type.Degree;
 import kz.kbtu.auth.type.Faculty;
 import kz.kbtu.study.course.Course;
+import kz.kbtu.study.course.CourseStatus;
 import kz.kbtu.study.course.ManagingCourses;
 import kz.kbtu.study.throwable.CreditOverflow;
 
@@ -36,6 +37,7 @@ public class Student extends User implements ManagingCourses, Serializable {
         id = "";    // TODO: id generator
         this.faculty = faculty;
         this.degree = degree;
+        incrementYearOfStudy();
 
         count++;
     }
@@ -79,17 +81,24 @@ public class Student extends User implements ManagingCourses, Serializable {
 
     @Override
     public void addCourse(Course course) throws CreditOverflow {
-        int currentCredits = 0;
+        if (course.getStatuses().get(getLogin()) == CourseStatus.CURRENT) {
+            int currentCredits = 0;
 
-        for (Course course1 : courses) {
-            currentCredits += course1.getCreditNumber();
-        }
+            for (Course course1 : courses) {
+                if (course1.getStatuses().get(getLogin()) == CourseStatus.CURRENT) {
+                    currentCredits += course1.getCreditNumber();
+                }
+            }
 
-        if (currentCredits + course.getCreditNumber() <= CREDIT_LIMIT) {
-            this.courses.add(course);
+            if (currentCredits + course.getCreditNumber() <= CREDIT_LIMIT) {
+                this.courses.add(course);
+            }
+            else {
+                throw new CreditOverflow(course, CREDIT_LIMIT);
+            }
         }
         else {
-            throw new CreditOverflow(course, CREDIT_LIMIT);
+            this.courses.add(course);
         }
     }
 

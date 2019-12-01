@@ -33,3 +33,27 @@
 01.12.19 17:19:02 - ORManager or created Course DS
 01.12.19 17:19:51 - ORManager or created Course we
 01.12.19 17:19:57 - ORManager or removed Coursewe
+01.12.19 17:52:31 - Admin admin entered to system!
+01.12.19 17:52:40 - Admin admin created ORManager or
+01.12.19 17:53:12 - Admin admin created Teacher a.i
+01.12.19 17:53:29 - Admin admin created Student a.yergali
+01.12.19 17:54:14 - ORManager or created Course DS
+01.12.19 17:54:26 - ORManager or offered Course DS offered to 1 year of study, FIT faculty, BACHELOR degree students
+01.12.19 17:57:39 - ORManager or offered Course DS offered to 0 year of study, FIT faculty, BACHELOR degree students
+01.12.19 19:05:50 - ORManager or created Course Math
+01.12.19 19:06:00 - ORManager or offered Course Math offered to 0 year of study, FIT faculty, BACHELOR degree students
+01.12.19 19:09:31 - Admin admin entered to system!
+01.12.19 19:09:42 - Admin admin created ORManager or
+01.12.19 19:09:55 - Admin admin created Teacher a.i
+01.12.19 19:10:05 - Admin admin created Student a.y
+01.12.19 19:10:30 - ORManager or created Course DS
+01.12.19 19:10:37 - ORManager or offered Course DS offered to 1 year of study, FIT faculty, BACHELOR degree students
+01.12.19 19:11:56 - ORManager or offered Course DS offered to 1 year of study, FIT faculty, BACHELOR degree students
+01.12.19 19:14:08 - ORManager or offered Course DS offered to 1 year of study, FIT faculty, BACHELOR degree students
+01.12.19 19:19:21 - ORManager or offered Course DS offered to 1 year of study, FIT faculty, BACHELOR degree students
+01.12.19 19:34:12 - Admin admin entered to system!
+01.12.19 19:34:30 - Admin admin created ORManager or
+01.12.19 19:34:48 - Admin admin created Teacher a.i
+01.12.19 19:35:00 - Admin admin created Student a.y
+01.12.19 19:35:34 - ORManager or created Course DS
+01.12.19 19:35:41 - ORManager or offered Course DS offered to 1 year of study, FIT faculty, BACHELOR degree students

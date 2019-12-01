@@ -28,11 +28,7 @@ public class File implements Serializable {
 
     @Override
     public String toString() {
-        return "File{" +
-                "title='" + title + '\'' +
-                ", text='" + text + '\'' +
-                ", creator='" + creator + '\'' +
-                '}';
+        return String.format("File { title: %s, text: %s, creator: %s }", title, text, creator);
     }
 
     @Override

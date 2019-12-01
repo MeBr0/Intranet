@@ -3,6 +3,8 @@ package kz.kbtu.util;
 import kz.kbtu.auth.base.User;
 import kz.kbtu.auth.main.Admin;
 import kz.kbtu.auth.main.ORManager;
+import kz.kbtu.auth.type.Degree;
+import kz.kbtu.auth.type.Faculty;
 import kz.kbtu.study.course.Course;
 
 import java.io.BufferedWriter;
@@ -72,6 +74,19 @@ public class Logger {
         }
         catch (IOException e) {
             System.err.println("Cannot write in removeUser()");
+        }
+    }
+
+    public void offerCourse(ORManager manager, Course course, int yearOfStudy, Faculty faculty, Degree degree) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(LOG, true))) {
+            writer.write(FORMAT.format(LocalDateTime.now()) + " - ORManager " + manager.getLogin() +
+                    " offered Course " + course.getName() + " offered to " + yearOfStudy + " year of study, " +
+                    faculty + " faculty, " + degree + " degree students" + "\n");
+
+            writer.flush();
+        }
+        catch (IOException e) {
+            System.err.println("Cannot write in createCourse()");
         }
     }
 }

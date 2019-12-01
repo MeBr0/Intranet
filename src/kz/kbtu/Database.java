@@ -2,6 +2,7 @@ package kz.kbtu;
 
 import kz.kbtu.auth.base.User;
 import kz.kbtu.auth.main.Admin;
+import kz.kbtu.auth.main.Student;
 import kz.kbtu.auth.type.Degree;
 import kz.kbtu.auth.type.Faculty;
 import kz.kbtu.auth.type.TeacherPosition;
@@ -9,11 +10,15 @@ import kz.kbtu.communication.news.News;
 import kz.kbtu.study.course.Course;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @SuppressWarnings("unchecked")
 public class Database {
+
+    public final static Date DEADLINE1 = new GregorianCalendar(2019, Calendar.OCTOBER, 14).getTime();
+    public final static Date DEADLINE2 = new GregorianCalendar(2019, Calendar.DECEMBER, 14).getTime();
+    public final static Date DEADLINE3 = new GregorianCalendar(2020, Calendar.JANUARY, 10).getTime();
+
     private List<User> users;
     private List<Course> courses;
     private List<News> news;
@@ -35,6 +40,16 @@ public class Database {
 
     public List<Course> getCourses() {
         return courses;
+    }
+
+    public Course getCourse(String name) {
+        for (Course course: courses) {
+            if (course.getName().equals(name)) {
+                return course;
+            }
+        }
+
+        return null;
     }
 
     public void addCourse(Course course) {
@@ -103,6 +118,23 @@ public class Database {
         }
 
         return users;
+    }
+
+    public List<Student> getStudents(int yearOfStudy, Faculty faculty, Degree degree) {
+        List<Student> students = new ArrayList<>();
+
+        for (User user: users) {
+            if (user instanceof Student) {
+                Student student = (Student) user;
+
+                if (student.getFaculty() == faculty && student.getDegree() == degree &&
+                        student.getYearOfStudy() == yearOfStudy) {
+                    students.add(student);
+                }
+            }
+        }
+
+        return students;
     }
 
     public Faculty[] getFaculties() {

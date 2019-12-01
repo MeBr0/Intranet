@@ -5,7 +5,10 @@ import kz.kbtu.auth.main.*;
 import kz.kbtu.auth.type.Degree;
 import kz.kbtu.auth.type.Faculty;
 import kz.kbtu.auth.type.TeacherPosition;
+import kz.kbtu.study.File;
+import kz.kbtu.study.Marks;
 import kz.kbtu.study.course.Course;
+import kz.kbtu.study.course.CourseStatus;
 import kz.kbtu.util.Logger;
 
 import java.util.ArrayList;
@@ -68,6 +71,9 @@ public class Intranet {
         }
         else if (user instanceof ORManager) {
             orManagerSession((ORManager) user);
+        }
+        else if (user instanceof Student) {
+            studentSession((Student) user);
         }
     }
 
@@ -369,6 +375,7 @@ public class Intranet {
             System.out.println("1. Add course");
             System.out.println("2. Remove course");
             System.out.println("3. Show course");
+            System.out.println("4. Offer course");
 
             answer = SCANNER.nextLine();
 
@@ -382,10 +389,14 @@ public class Intranet {
                 case "3":
                     orManagerShow();
                     break;
+                case "4":
+                    orManagerOffer(manager);
+                    break;
             }
         }
     }
 
+    /* ORManager - add */
     private void orManagerAdd(ORManager manager) {
         System.out.println("Type name of course!");
         String name = SCANNER.nextLine();
@@ -406,12 +417,15 @@ public class Intranet {
 
             LOGGER.createCourse(manager, course);
             System.out.println("Course created!");
+
+            database.save();
         }
         else {
             System.err.println("Cannot create Course!");
         }
     }
 
+    /* ORManager - remove */
     private void orManagerRemove(ORManager manager) {
         String answer = "";
 
@@ -425,6 +439,8 @@ public class Intranet {
             if (result != null) {
                 System.out.println("Course removed!");
                 LOGGER.removeCourse(manager, result);
+
+                database.save();
             }
             else {
                 System.out.println("Cannot find such course!");
@@ -434,6 +450,7 @@ public class Intranet {
         database.save();
     }
 
+    /* ORManager - show */
     private void orManagerShow() {
         List<Course> courses = database.getCourses();
 
@@ -446,5 +463,215 @@ public class Intranet {
 
             answer = SCANNER.nextLine();
         }
+    }
+
+    /* ORManager - offer */
+    private void orManagerOffer(ORManager manager) {
+        System.out.println("Type name of course!");
+        String name = SCANNER.nextLine();
+
+        System.out.println("Choose faculty!");
+        Faculty[] faculties = database.getFaculties();
+        for (int i = 0; i < faculties.length; ++i) {
+            System.out.println(i+1 + ". " + faculties[i]);
+        }
+        int index = SCANNER.nextInt();
+        Faculty faculty = faculties[index-1];
+
+        System.out.println("Choose degree!");
+        Degree[] degrees = database.getDegrees();
+        for (int i = 0; i < degrees.length; ++i) {
+            System.out.println(i+1 + ". " + degrees[i]);
+        }
+        index = SCANNER.nextInt();
+        Degree degree = degrees[index-1];
+
+        System.out.println("Type year of study!");
+        int yearOfStudy = SCANNER.nextInt();
+
+        Course course = database.getCourse(name);
+        List<Student> students = database.getStudents(yearOfStudy, faculty, degree);
+
+        if (course != null) {
+            manager.offerCourse(course, students);
+
+            LOGGER.offerCourse(manager, course, yearOfStudy, faculty, degree);
+            System.out.println("Course offered!");
+
+            database.save();
+        }
+    }
+
+    /* Student */
+    private void studentSession(Student student) {
+        String answer = "";
+
+        while (!answer.equals(BACK)) {
+            System.out.println("1. Show courses");
+            System.out.println("2. Registration");
+            System.out.println("3. News");
+            System.out.println("4. Transcript");
+
+            answer = SCANNER.nextLine();
+
+            switch (answer) {
+                case "1":
+                    studentCourses(student);
+                    break;
+                case "2":
+                    studentRegister(student);
+                    break;
+                case "3":
+                    studentNews();
+                    break;
+                case "4":
+                    studentTranscript(student);
+                    break;
+            }
+        }
+    }
+
+    /* Student - courses */
+    private void studentCourses(Student student) {
+        List<Course> courses = new ArrayList<>();
+
+        for (Course course: student.getCourses()) {
+            if (course.getStatuses().get(student.getLogin()) == CourseStatus.CURRENT) {
+                courses.add(course);
+            }
+        }
+
+        while (true) {
+            for (int i = 0; i < courses.size(); ++i) {
+                System.out.println(i+1 + ". " + courses.get(i));
+            }
+
+            System.out.println("Choose course!");
+
+            String answer = SCANNER.nextLine();
+
+            if (answer.equals(BACK))
+                break;
+
+            int index = Integer.parseInt(answer);
+
+            studentCourse(student, courses.get(index-1));
+        }
+    }
+
+    private void studentCourse(Student student, Course course) {
+        String answer = "";
+
+        while (!answer.equals(BACK)) {
+            System.out.println("1. Show course info");
+            System.out.println("2. Show course files");
+            System.out.println("3. Show teacher info");
+            System.out.println("4. Show marks");
+
+            answer = SCANNER.nextLine();
+
+            switch (answer) {
+                case "1":
+                    studentCourseInfo(course);
+                    break;
+                case "2":
+                    studentCourseFiles(course);
+                    break;
+                case "3":
+                    studentCourseTeacher(course);
+                    break;
+                case "4":
+                    studentCourseMarks(student, course);
+                    break;
+            }
+        }
+    }
+
+    private void studentCourseInfo(Course course) {
+        System.out.println(course);
+    }
+
+    private void studentCourseFiles(Course course) {
+        List<File> files = course.getFiles();
+
+        while (true) {
+            for (int i = 0; i < files.size(); ++i) {
+                System.out.println(i+1 + ". " + files.get(i));
+            }
+
+            System.out.println("Choose file!");
+
+            String answer = SCANNER.nextLine();
+
+            if (answer.equals(BACK))
+                break;
+
+            int index = Integer.parseInt(answer);
+
+            studentCourseFile(files.get(index-1));
+        }
+    }
+
+    private void studentCourseFile(File file) {
+        System.out.println(file);
+    }
+
+    private void studentCourseTeacher(Course course) {
+        Teacher teacher = course.getTeacher();
+
+        System.out.println(String.format("Teacher { name: %s, lastName: %s, faculty: %s, position: %s",
+                teacher.getFirstName(), teacher.getLastName(), teacher.getFaculty(), teacher.getPosition()));
+    }
+
+    private void studentCourseMarks(Student student, Course course) {
+        Marks marks = course.getMarks().get(student.getLogin());
+
+        System.out.println("Attestation1 : " + marks.getAttestation1().getScore());
+        System.out.println("Attestation2 : " + marks.getAttestation2().getScore());
+        System.out.println("Final : " + marks.getFinale().getScore());
+    }
+
+    /* Student - register */
+    private void studentRegister(Student student) {
+        List<Course> courses = new ArrayList<>();
+
+        for (Course course: student.getCourses()) {
+
+            if (course.getStatus(student.getLogin()) == CourseStatus.FUTURE) {
+                courses.add(course);
+            }
+        }
+
+        while (true) {
+            for (int i = 0; i < courses.size(); ++i) {
+                System.out.println(i+1 + ". " + courses.get(i));
+            }
+
+            System.out.println("Choose course to register!");
+
+            String answer = SCANNER.nextLine();
+
+            if (answer.equals(BACK))
+                break;
+
+            int index = Integer.parseInt(answer);
+
+            studentRegisterCourse(student, courses.get(index-1));
+        }
+    }
+
+    private void studentRegisterCourse(Student student, Course course) {
+        course.updateStatus(student.getLogin(), CourseStatus.CURRENT);
+        course.openMarks(student.getLogin());
+    }
+
+    /* Student - news */
+    private void studentNews() {
+
+    }
+
+    /* Student - transcript */
+    private void studentTranscript(Student student) {
+
     }
 }
