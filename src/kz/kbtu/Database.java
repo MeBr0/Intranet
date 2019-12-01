@@ -4,6 +4,7 @@ import kz.kbtu.auth.base.User;
 import kz.kbtu.auth.main.Admin;
 import kz.kbtu.auth.type.Degree;
 import kz.kbtu.auth.type.Faculty;
+import kz.kbtu.auth.type.TeacherPosition;
 import kz.kbtu.communication.news.News;
 import kz.kbtu.study.course.Course;
 
@@ -46,6 +47,18 @@ public class Database {
         this.users.add(user);
     }
 
+    public User removeUser(String login) {
+        for (User user: users) {
+            if (user.getLogin().equals(login)) {
+                users.remove(user);
+
+                return user;
+            }
+        }
+
+        return null;
+    }
+
     public User getUser(String login, String password) {
         for (User user: users) {
             if (user.checkCredentials(login, password)) {
@@ -56,6 +69,18 @@ public class Database {
         return null;
     }
 
+    public <T> List<User> getUsers(Class<T> clazz) {
+        List<User> users = new ArrayList<>();
+
+        for (User user: this.users) {
+            if (user.getClass() == clazz) {
+                users.add(user);
+            }
+        }
+
+        return users;
+    }
+
     public Faculty[] getFaculties() {
         return new Faculty[] {Faculty.FIT, Faculty.BS, Faculty.FGA, Faculty.FOGI, Faculty.ISE, Faculty.MCM, Faculty.KMA};
     }
@@ -64,6 +89,10 @@ public class Database {
         return new Degree[] {Degree.BACHELOR, Degree.MASTER, Degree.PHILOSOPHY_DOCTOR};
     }
 
+    public TeacherPosition[] getPositions() {
+        return new TeacherPosition[] {TeacherPosition.TUTOR, TeacherPosition.LECTURER, TeacherPosition.PROFESSOR,
+                TeacherPosition.SENIOR_LECTURER};
+    }
     public void load() {
         loadUsers();
     }

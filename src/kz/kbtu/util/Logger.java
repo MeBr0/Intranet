@@ -28,12 +28,24 @@ public class Logger {
     public void createUser(Admin admin, User user) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(LOG, true))) {
             writer.write(FORMAT.format(LocalDateTime.now()) + " - Admin " + admin.getLogin() +
-                    " created user!" + user.getClass().getSimpleName() + " " + user.getLogin() +  "\n");
+                    " created " + user.getClass().getSimpleName() + " " + user.getLogin() +  "\n");
 
             writer.flush();
         }
         catch (IOException e) {
             System.err.println("Cannot write in createUser()");
+        }
+    }
+
+    public void removeUser(Admin admin, User user) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(LOG, true))) {
+            writer.write(FORMAT.format(LocalDateTime.now()) + " - Admin " + admin.getLogin() +
+                    " removed " + user.getClass().getSimpleName() + " " + user.getLogin() +  "\n");
+
+            writer.flush();
+        }
+        catch (IOException e) {
+            System.err.println("Cannot write in removeUser()");
         }
     }
 }

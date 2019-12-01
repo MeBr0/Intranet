@@ -25,6 +25,10 @@ public class Admin extends User implements Serializable {
         return new Manager(faculty, salary, login, firstName, lastName);
     }
 
+    public ORManager createOrManager(int salary, String login, String firstName, String lastName) {
+        return new ORManager(salary, login, firstName, lastName);
+    }
+
     public Executor createExecutor(int salary, String login, String firstName, String lastName) {
         return new Executor(salary, login, firstName, lastName);
     }
