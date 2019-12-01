@@ -30,6 +30,10 @@ public abstract class Person {
         this.lastName = lastName;
     }
 
+    public String getFullName() {
+        return this.getFirstName() + " " + this.getLastName();
+    }
+
     public Date getBirthDate() {
         return birthDate;
     }
@@ -62,14 +66,12 @@ public abstract class Person {
         if (!(o instanceof Person)) return false;
         Person person = (Person) o;
         return firstName.equals(person.firstName) &&
-                lastName.equals(person.lastName) &&
-                Objects.equals(birthDate, person.birthDate) &&
-                gender == person.gender;
+                lastName.equals(person.lastName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(firstName, lastName, birthDate, gender);
+        return Objects.hash(firstName, lastName);
     }
 }
 

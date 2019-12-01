@@ -59,13 +59,11 @@ public abstract class User extends Person {
         if (!super.equals(o)) return false;
         User user = (User) o;
         return login.equals(user.login) &&
-                password.equals(user.password) &&
-                Objects.equals(phoneNumber, user.phoneNumber) &&
-                Objects.equals(email, user.email);
+                password.equals(user.password);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), login, password, phoneNumber, email);
+        return Objects.hash(super.hashCode(), login, password);
     }
 }

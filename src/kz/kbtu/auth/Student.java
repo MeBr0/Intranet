@@ -84,13 +84,13 @@ public class Student extends User {
         Student student = (Student) o;
         return yearOfStudy == student.yearOfStudy &&
                 Double.compare(student.gpa, gpa) == 0 &&
-                courses.equals(student.courses) &&
+                id.equals(student.id) &&
                 faculty == student.faculty &&
                 degree == student.degree;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), yearOfStudy, courses, gpa, faculty, degree);
+        return Objects.hash(super.hashCode(), id, yearOfStudy, gpa, faculty, degree);
     }
 }
