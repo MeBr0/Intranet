@@ -2,6 +2,8 @@ package kz.kbtu;
 
 import kz.kbtu.auth.base.User;
 import kz.kbtu.auth.main.Admin;
+import kz.kbtu.auth.type.Degree;
+import kz.kbtu.auth.type.Faculty;
 import kz.kbtu.communication.news.News;
 import kz.kbtu.study.course.Course;
 
@@ -52,6 +54,14 @@ public class Database {
         }
 
         return null;
+    }
+
+    public Faculty[] getFaculties() {
+        return new Faculty[] {Faculty.FIT, Faculty.BS, Faculty.FGA, Faculty.FOGI, Faculty.ISE, Faculty.MCM, Faculty.KMA};
+    }
+
+    public Degree[] getDegrees() {
+        return new Degree[] {Degree.BACHELOR, Degree.MASTER, Degree.PHILOSOPHY_DOCTOR};
     }
 
     public void load() {
