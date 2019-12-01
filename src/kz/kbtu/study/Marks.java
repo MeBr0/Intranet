@@ -80,11 +80,8 @@ public class Marks implements Serializable {
 
     @Override
     public String toString() {
-        return "Marks{" +
-                "attestation1=" + attestation1 +
-                ", attestation2=" + attestation2 +
-                ", finale=" + finale +
-                '}';
+        return String.format("Marks { attestation1: %.2f, attestation2: %.2f, final: %.2f }",
+                attestation1.getScore(), attestation2.getScore(), finale.getScore());
     }
 
     @Override

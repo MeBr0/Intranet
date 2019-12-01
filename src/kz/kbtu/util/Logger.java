@@ -3,8 +3,10 @@ package kz.kbtu.util;
 import kz.kbtu.auth.base.User;
 import kz.kbtu.auth.main.Admin;
 import kz.kbtu.auth.main.ORManager;
+import kz.kbtu.auth.main.Teacher;
 import kz.kbtu.auth.type.Degree;
 import kz.kbtu.auth.type.Faculty;
+import kz.kbtu.study.File;
 import kz.kbtu.study.course.Course;
 
 import java.io.BufferedWriter;
@@ -87,6 +89,18 @@ public class Logger {
         }
         catch (IOException e) {
             System.err.println("Cannot write in createCourse()");
+        }
+    }
+
+    public void uploadFile(Teacher teacher, Course course, File file) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(LOG, true))) {
+            writer.write(FORMAT.format(LocalDateTime.now()) + " - Teacher " + teacher.getLogin() +
+                    " added File " + file.getTitle() + " to Course " + course.getName() + "\n");
+
+            writer.flush();
+        }
+        catch (IOException e) {
+            System.err.println("Cannot write in uploadFile()");
         }
     }
 }

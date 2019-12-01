@@ -5,6 +5,7 @@ import kz.kbtu.auth.main.*;
 import kz.kbtu.auth.type.Degree;
 import kz.kbtu.auth.type.Faculty;
 import kz.kbtu.auth.type.TeacherPosition;
+import kz.kbtu.communication.news.News;
 import kz.kbtu.study.File;
 import kz.kbtu.study.Marks;
 import kz.kbtu.study.course.Course;
@@ -75,6 +76,9 @@ public class Intranet {
         else if (user instanceof Student) {
             studentSession((Student) user);
         }
+        else if (user instanceof Teacher) {
+            teacherSession((Teacher) user);
+        }
     }
 
     /* Admin */
@@ -98,7 +102,7 @@ public class Intranet {
                     adminRemove(admin);
                     break;
                 case "3":
-                    adminShow();
+                    users();
                     break;
             }
         }
@@ -320,53 +324,6 @@ public class Intranet {
         database.save();
     }
 
-    /* Admin - show */
-    private void adminShow() {
-        String answer = "";
-
-        while (!answer.equals(BACK)) {
-            System.out.println("Choose users!");
-            System.out.println("1. Students");
-            System.out.println("2. Manager");
-            System.out.println("3. ORManagers");
-            System.out.println("4. Teachers");
-            System.out.println("5. Executors");
-            System.out.println("6. Admins");
-
-            answer = SCANNER.nextLine();
-
-            List<User> users = new ArrayList<>();
-
-            switch (answer) {
-                case "1":
-                    users = database.getUsers(Student.class);
-                    break;
-                case "2":
-                    users = database.getUsers(Manager.class);
-                    break;
-                case "3":
-                    users = database.getUsers(ORManager.class);
-                    break;
-                case "4":
-                    users = database.getUsers(Teacher.class);
-                    break;
-                case "5":
-                    users = database.getUsers(Executor.class);
-                    break;
-                case "6":
-                    users = database.getUsers(Admin.class);
-                    break;
-                default:
-                    System.out.println("Invalid option!");
-                    break;
-            }
-
-            for (User user: users) {
-                System.out.println(user);
-            }
-        }
-    }
-
     /* ORManager */
     private void orManagerSession(ORManager manager) {
         String answer = "";
@@ -522,7 +479,7 @@ public class Intranet {
                     studentRegister(student);
                     break;
                 case "3":
-                    studentNews();
+                    news();
                     break;
                 case "4":
                     studentTranscript(student);
@@ -572,55 +529,19 @@ public class Intranet {
 
             switch (answer) {
                 case "1":
-                    studentCourseInfo(course);
+                    courseInfo(course);
                     break;
                 case "2":
-                    studentCourseFiles(course);
+                    courseFiles(course);
                     break;
                 case "3":
-                    studentCourseTeacher(course);
+                    courseTeacher(course);
                     break;
                 case "4":
                     studentCourseMarks(student, course);
                     break;
             }
         }
-    }
-
-    private void studentCourseInfo(Course course) {
-        System.out.println(course);
-    }
-
-    private void studentCourseFiles(Course course) {
-        List<File> files = course.getFiles();
-
-        while (true) {
-            for (int i = 0; i < files.size(); ++i) {
-                System.out.println(i+1 + ". " + files.get(i));
-            }
-
-            System.out.println("Choose file!");
-
-            String answer = SCANNER.nextLine();
-
-            if (answer.equals(BACK))
-                break;
-
-            int index = Integer.parseInt(answer);
-
-            studentCourseFile(files.get(index-1));
-        }
-    }
-
-    private void studentCourseFile(File file) {
-        System.out.println(file);
-    }
-
-    private void studentCourseTeacher(Course course) {
-        Teacher teacher = course.getTeacher();
-
-        System.out.println(String.format("Teacher { name: %s, lastName: %s, faculty: %s, position: %s",
-                teacher.getFirstName(), teacher.getLastName(), teacher.getFaculty(), teacher.getPosition()));
     }
 
     private void studentCourseMarks(Student student, Course course) {
@@ -633,16 +554,15 @@ public class Intranet {
 
     /* Student - register */
     private void studentRegister(Student student) {
-        List<Course> courses = new ArrayList<>();
-
-        for (Course course: student.getCourses()) {
-
-            if (course.getStatus(student.getLogin()) == CourseStatus.FUTURE) {
-                courses.add(course);
-            }
-        }
-
         while (true) {
+            List<Course> courses = new ArrayList<>();
+
+            for (Course course: student.getCourses()) {
+                if (course.getStatus(student.getLogin()) == CourseStatus.FUTURE) {
+                    courses.add(course);
+                }
+            }
+
             for (int i = 0; i < courses.size(); ++i) {
                 System.out.println(i+1 + ". " + courses.get(i));
             }
@@ -663,15 +583,210 @@ public class Intranet {
     private void studentRegisterCourse(Student student, Course course) {
         course.updateStatus(student.getLogin(), CourseStatus.CURRENT);
         course.openMarks(student.getLogin());
-    }
 
-    /* Student - news */
-    private void studentNews() {
-
+        database.save();
+        System.out.println("Course registered!");
     }
 
     /* Student - transcript */
     private void studentTranscript(Student student) {
+        List<Course> courses = student.getCourses();
 
+        for (Course course: courses) {
+            if (course.getStatus(student.getLogin()) != CourseStatus.FUTURE) {
+                Marks marks = course.getMarks(student.getLogin());
+
+                System.out.println(course.getName() + ": " + marks);
+            }
+        }
+    }
+
+    /* Teacher */
+    private void teacherSession(Teacher teacher) {
+        String answer = "";
+
+        while (!answer.equals(BACK)) {
+            System.out.println("1. Show courses");
+            System.out.println("2. News");
+
+            answer = SCANNER.nextLine();
+
+            switch (answer) {
+                case "1":
+                    teacherCourses(teacher);
+                    break;
+                case "2":
+                    news();
+                    break;
+            }
+        }
+    }
+
+    /* Teacher - courses */
+    private void teacherCourses(Teacher teacher) {
+        List<Course> courses = teacher.getCourses();
+
+        while (true) {
+            for (int i = 0; i < courses.size(); ++i) {
+                System.out.println(i+1 + ". " + courses.get(i));
+            }
+
+            System.out.println("Choose course!");
+
+            String answer = SCANNER.nextLine();
+
+            if (answer.equals(BACK))
+                break;
+
+            int index = Integer.parseInt(answer);
+
+            teacherCourse(teacher, courses.get(index-1));
+        }
+    }
+
+    private void teacherCourse(Teacher teacher, Course course) {
+        String answer = "";
+
+        while (!answer.equals(BACK)) {
+            System.out.println("1. Show course info");
+            System.out.println("2. Show course files");
+            System.out.println("3. Show teacher info");
+            System.out.println("4. Show students");
+            System.out.println("5. Upload file");
+
+            answer = SCANNER.nextLine();
+
+            switch (answer) {
+                case "1":
+                    courseInfo(course);
+                    break;
+                case "2":
+                    courseFiles(course);
+                    break;
+                case "3":
+                    courseTeacher(course);
+                    break;
+                case "4":
+                    courseStudents(course);
+                    break;
+                case "5":
+                    teacherCourseFile(teacher, course);
+                    break;
+            }
+        }
+    }
+
+    /* */
+    private void teacherCourseFile(Teacher teacher, Course course) {
+        System.out.println("Type title of file!");
+        String title = SCANNER.nextLine();
+
+        System.out.println("Type text of file!");
+        String text = SCANNER.nextLine();
+
+        File file = teacher.createFile(title, text);
+
+        course.uploadFile(file);
+        System.out.println("File uploaded!");
+        LOGGER.uploadFile(teacher, course, file);
+
+        database.save();
+    }
+
+    /* Users */
+    private void users() {
+        String answer = "";
+
+        while (!answer.equals(BACK)) {
+            System.out.println("Choose users!");
+            System.out.println("1. Students");
+            System.out.println("2. Manager");
+            System.out.println("3. ORManagers");
+            System.out.println("4. Teachers");
+            System.out.println("5. Executors");
+            System.out.println("6. Admins");
+
+            answer = SCANNER.nextLine();
+
+            List<User> users = new ArrayList<>();
+
+            switch (answer) {
+                case "1":
+                    users = database.getUsers(Student.class);
+                    break;
+                case "2":
+                    users = database.getUsers(Manager.class);
+                    break;
+                case "3":
+                    users = database.getUsers(ORManager.class);
+                    break;
+                case "4":
+                    users = database.getUsers(Teacher.class);
+                    break;
+                case "5":
+                    users = database.getUsers(Executor.class);
+                    break;
+                case "6":
+                    users = database.getUsers(Admin.class);
+                    break;
+                default:
+                    System.out.println("Invalid option!");
+                    break;
+            }
+
+            for (User user: users) {
+                System.out.println(user);
+            }
+        }
+    }
+
+    /* Course */
+    private void courseInfo(Course course) {
+        System.out.println(course);
+    }
+
+    private void courseFiles(Course course) {
+        List<File> files = course.getFiles();
+
+        while (true) {
+            for (int i = 0; i < files.size(); ++i) {
+                System.out.println(i+1 + ". " + files.get(i).getTitle());
+            }
+
+            System.out.println("Choose file!");
+
+            String answer = SCANNER.nextLine();
+
+            if (answer.equals(BACK))
+                break;
+
+            int index = Integer.parseInt(answer);
+
+            courseFile(files.get(index-1));
+        }
+    }
+
+    private void courseFile(File file) {
+        System.out.println(file);
+    }
+
+    private void courseTeacher(Course course) {
+        System.out.println(course.getTeacher());
+    }
+
+    private void courseStudents(Course course) {
+        for (Student student: course.getStudents()) {
+            System.out.println(student);
+        }
+    }
+
+    /* News */
+    private void news() {
+        // TODO: Доработать
+        List<News> newses = database.getNews();
+
+        for (News news: newses) {
+            System.out.println(news);
+        }
     }
 }

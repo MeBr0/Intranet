@@ -5,6 +5,7 @@ import kz.kbtu.auth.type.Faculty;
 import kz.kbtu.auth.type.TeacherPosition;
 import kz.kbtu.communication.news.ManagingNews;
 import kz.kbtu.communication.news.News;
+import kz.kbtu.study.File;
 import kz.kbtu.study.course.Course;
 import kz.kbtu.study.course.ManagingCourses;
 
@@ -72,6 +73,10 @@ public class Teacher extends Employee implements ManagingCourses, ManagingNews, 
         }
 
         return false;
+    }
+
+    public File createFile(String title, String text) {
+        return new File(title, text, getFullName());
     }
 
     @Override

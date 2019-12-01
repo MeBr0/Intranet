@@ -57,3 +57,16 @@
 01.12.19 19:35:00 - Admin admin created Student a.y
 01.12.19 19:35:34 - ORManager or created Course DS
 01.12.19 19:35:41 - ORManager or offered Course DS offered to 1 year of study, FIT faculty, BACHELOR degree students
+01.12.19 19:56:33 - ORManager or created Course Math
+01.12.19 19:56:42 - ORManager or offered Course Math offered to 1 year of study, FIT faculty, BACHELOR degree students
+01.12.19 19:58:05 - ORManager or created Course LA
+01.12.19 19:58:10 - ORManager or offered Course LA offered to 1 year of study, FIT faculty, BACHELOR degree students
+01.12.19 19:59:33 - ORManager or created Course Calc
+01.12.19 19:59:38 - ORManager or offered Course Calc offered to 1 year of study, FIT faculty, BACHELOR degree students
+01.12.19 21:05:31 - Admin admin entered to system!
+01.12.19 21:05:39 - Admin admin created Teacher a.i
+01.12.19 21:06:13 - Admin admin created ORManager or
+01.12.19 21:09:31 - Admin admin created Student a.y
+01.12.19 21:10:09 - ORManager or created Course DS
+01.12.19 21:10:15 - ORManager or offered Course DS offered to 1 year of study, FIT faculty, BACHELOR degree students
+01.12.19 21:13:02 - Teacher a.i added File File1 to Course DS
