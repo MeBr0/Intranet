@@ -3,9 +3,10 @@ package kz.kbtu.auth.base;
 import kz.kbtu.communication.message.Message;
 import kz.kbtu.communication.message.Messaging;
 
+import java.io.Serializable;
 import java.util.*;
 
-public abstract class Employee extends User implements Messaging {
+public abstract class Employee extends User implements Messaging, Serializable {
     private int salary;
     private List<Message> messages;
 

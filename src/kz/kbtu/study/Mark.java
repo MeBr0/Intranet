@@ -2,11 +2,12 @@ package kz.kbtu.study;
 
 import kz.kbtu.study.throwable.DeadlinePassed;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
 
-public class Mark {
+public class Mark implements Serializable {
     private double score;
     private Date deadline;
 

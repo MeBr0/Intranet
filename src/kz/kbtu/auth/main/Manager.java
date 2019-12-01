@@ -5,13 +5,14 @@ import kz.kbtu.auth.type.Faculty;
 import kz.kbtu.communication.news.ManagingNews;
 import kz.kbtu.communication.news.News;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 
-public class Manager extends Employee implements ManagingNews {
+public class Manager extends Employee implements ManagingNews, Serializable {
     private Faculty faculty;
 
-    public Manager(Faculty faculty, int salary, String login, String firstName, String lastName) {
+    Manager(Faculty faculty, int salary, String login, String firstName, String lastName) {
         super(salary, login, firstName, lastName);
 
         this.faculty = faculty;

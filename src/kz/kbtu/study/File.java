@@ -1,8 +1,9 @@
 package kz.kbtu.study;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class File {
+public class File implements Serializable {
     private String title;
     private String text;
     private String creator;

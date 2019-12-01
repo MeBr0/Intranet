@@ -2,10 +2,11 @@ package kz.kbtu.auth.base;
 
 import kz.kbtu.auth.type.Gender;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
-public abstract class Person {
+public abstract class Person implements Serializable {
     private String firstName;
     private String lastName;
     private Date birthDate;

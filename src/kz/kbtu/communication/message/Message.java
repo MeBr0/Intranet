@@ -2,10 +2,11 @@ package kz.kbtu.communication.message;
 
 import kz.kbtu.auth.base.Employee;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
-public class Message {
+public class Message implements Serializable {
     private String title;
     private String text;
     private Employee sender;

@@ -4,10 +4,11 @@ import kz.kbtu.auth.type.Faculty;
 import kz.kbtu.auth.base.Employee;
 import kz.kbtu.communication.message.Message;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
-public class News extends Message {
+public class News extends Message implements Serializable {
     private Faculty faculty;
 
     public News(Faculty faculty, String title, String text, Employee sender, Date timestamp) {

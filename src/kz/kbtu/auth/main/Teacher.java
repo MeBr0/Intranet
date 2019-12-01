@@ -8,9 +8,10 @@ import kz.kbtu.communication.news.News;
 import kz.kbtu.study.course.Course;
 import kz.kbtu.study.course.ManagingCourses;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class Teacher extends Employee implements ManagingCourses, ManagingNews {
+public class Teacher extends Employee implements ManagingCourses, ManagingNews, Serializable {
     private Faculty faculty;
     private TeacherPosition position;
     private List<Course> courses;
@@ -19,7 +20,7 @@ public class Teacher extends Employee implements ManagingCourses, ManagingNews {
         courses = new ArrayList<>();
     }
 
-    public Teacher(Faculty faculty, TeacherPosition position, int salary, String login, String firstName,
+    Teacher(Faculty faculty, TeacherPosition position, int salary, String login, String firstName,
                    String lastName) {
         super(salary, login, firstName, lastName);
 

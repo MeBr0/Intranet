@@ -1,8 +1,9 @@
 package kz.kbtu.auth.base;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public abstract class User extends Person {
+public abstract class User extends Person implements Serializable {
     private String login;
     private String password;
     private String phoneNumber;
@@ -40,6 +41,10 @@ public abstract class User extends Person {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public boolean checkCredentials(String login, String password) {
+        return this.login.equals(login) && this.password.equals(password);
     }
 
     @Override

@@ -2,10 +2,11 @@ package kz.kbtu.study;
 
 import kz.kbtu.study.throwable.DeadlinePassed;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
-public class Marks {
+public class Marks implements Serializable {
     private Mark attestation1;
     private Mark attestation2;
     private Mark finale;

@@ -7,11 +7,12 @@ import kz.kbtu.study.course.Course;
 import kz.kbtu.study.course.ManagingCourses;
 import kz.kbtu.study.throwable.CreditOverflow;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class Student extends User implements ManagingCourses {
+public class Student extends User implements ManagingCourses, Serializable {
 
     private final String id;
     private int yearOfStudy;
@@ -29,7 +30,7 @@ public class Student extends User implements ManagingCourses {
         gpa = 0;
     }
 
-    public Student(Faculty faculty, Degree degree, String login, String firstName, String lastName) {
+    Student(Faculty faculty, Degree degree, String login, String firstName, String lastName) {
         super(login, firstName, lastName);
 
         id = "";    // TODO: id generator

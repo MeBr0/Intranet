@@ -5,17 +5,18 @@ import kz.kbtu.communication.order.ManagingOrders;
 import kz.kbtu.communication.order.Order;
 import kz.kbtu.communication.order.OrderStatus;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Executor extends Employee implements ManagingOrders {
+public class Executor extends Employee implements ManagingOrders, Serializable {
     private static List<Order> orders;
 
     static  {
         orders = new ArrayList<>();
     }
 
-    public Executor(int salary, String login, String firstName, String lastName) {
+    Executor(int salary, String login, String firstName, String lastName) {
         super(salary, login, firstName, lastName);
     }
 

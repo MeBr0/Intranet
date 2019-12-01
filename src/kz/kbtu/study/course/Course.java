@@ -5,12 +5,13 @@ import kz.kbtu.auth.main.Teacher;
 import kz.kbtu.study.File;
 import kz.kbtu.study.Marks;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Course {
+public class Course implements Serializable {
     private String name;
     private int creditNumber;
     private Teacher teacher;

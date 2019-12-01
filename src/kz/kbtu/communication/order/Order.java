@@ -3,10 +3,11 @@ package kz.kbtu.communication.order;
 import kz.kbtu.auth.base.Employee;
 import kz.kbtu.communication.message.Message;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
-public class Order extends Message {
+public class Order extends Message implements Serializable {
     private OrderStatus status;
 
     public Order(OrderStatus status, String title, String text, Employee sender, Date timestamp) {
