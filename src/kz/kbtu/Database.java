@@ -31,8 +31,8 @@ public class Database {
     {
         load();
 
-        Admin admin = Admin.createAdmin("admin", "", "");
-        users.add(admin);
+//        Admin admin = Admin.createAdmin("admin", "", "");
+//        users.add(admin);
     }
 
     public List<User> getUsers() {

@@ -7,5 +7,5 @@ public interface ManagingOrders {
     List<Order> getOrders(OrderStatus status);
     Order getOrder(String title);
     void addOrder(Order order);
-    boolean changeOrderStatus(String title, OrderStatus status);
+    void changeOrderStatus(Order order, OrderStatus status);
 }

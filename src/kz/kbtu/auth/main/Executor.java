@@ -55,16 +55,8 @@ public class Executor extends Employee implements ManagingOrders, Serializable {
     }
 
     @Override
-    public boolean changeOrderStatus(String title, OrderStatus status) {
-        for (Order order: orders) {
-            if (order.getTitle().equals(title)) {
-                order.setStatus(status);
-
-                return true;
-            }
-        }
-
-        return false;
+    public void changeOrderStatus(Order order, OrderStatus status) {
+        order.setStatus(status);
     }
 
     @Override

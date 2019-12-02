@@ -881,13 +881,7 @@ public class Intranet {
 
     private void executorOrders(Executor executor, OrderStatus status) {
         while (true) {
-            List<Order> orders = new ArrayList<>();
-
-            for (Order order: executor.getOrders()) {
-                if (order.getStatus() == status) {
-                    orders.add(order);
-                }
-            }
+            List<Order> orders = executor.getOrders(status);
 
             if (orders.size() == 0) {
                 System.out.println("Empty!");
@@ -925,11 +919,11 @@ public class Intranet {
 
             switch (answer) {
                 case "1":
-                    order.setStatus(OrderStatus.PENDING);
+                    executor.changeOrderStatus(order, OrderStatus.PENDING);
                     System.out.println("Order accepted! (now pending)");
                     break;
                 case "2":
-                    order.setStatus(OrderStatus.REJECTED);
+                    executor.changeOrderStatus(order, OrderStatus.REJECTED);
                     System.out.println("Order rejected!");
                     break;
             }
@@ -943,11 +937,11 @@ public class Intranet {
 
             switch (answer) {
                 case "1":
-                    order.setStatus(OrderStatus.FINISHED);
+                    executor.changeOrderStatus(order, OrderStatus.FINISHED);
                     System.out.println("Order finished!");
                     break;
                 case "2":
-                    order.setStatus(OrderStatus.REJECTED);
+                    executor.changeOrderStatus(order, OrderStatus.REJECTED);
                     System.out.println("Order rejected!");
                     break;
             }
@@ -959,7 +953,7 @@ public class Intranet {
             answer = SCANNER.nextLine();
 
             if ("1".equals(answer)) {
-                order.setStatus(OrderStatus.PENDING);
+                executor.changeOrderStatus(order, OrderStatus.PENDING);
                 System.out.println("Order accepted! (now pending)");
             }
         }
@@ -970,7 +964,7 @@ public class Intranet {
             answer = SCANNER.nextLine();
 
             if ("1".equals(answer)) {
-                order.setStatus(OrderStatus.PENDING);
+                executor.changeOrderStatus(order, OrderStatus.PENDING);
                 System.out.println("Order accepted! (now pending)");
             }
         }

@@ -93,3 +93,7 @@
 02.12.19 21:00:05 - Admin admin created Executor exe
 02.12.19 21:00:12 - Admin admin created Teacher a.i
 02.12.19 21:00:29 - Teacher a.i send Order QWE to Executor exe
+02.12.19 21:36:34 - Admin admin entered to system!
+02.12.19 21:36:39 - Admin admin created Executor exe
+02.12.19 21:36:48 - Admin admin created Teacher qwe
+02.12.19 21:37:02 - Teacher qwe send Order qwe to Executor exe
