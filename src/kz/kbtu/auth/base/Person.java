@@ -12,7 +12,7 @@ public abstract class Person implements Serializable {
     private Date birthDate;
     private Gender gender;
 
-    public Person(String firstName, String lastName) {
+    protected Person(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
     }

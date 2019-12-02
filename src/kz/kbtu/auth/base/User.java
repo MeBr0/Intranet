@@ -13,7 +13,7 @@ public abstract class User extends Person implements Serializable {
         this.password = "Kbtu111";
     }
 
-    public User(String login, String firstName, String lastName) {
+    protected User(String login, String firstName, String lastName) {
         super(firstName, lastName);
 
         this.login = login;

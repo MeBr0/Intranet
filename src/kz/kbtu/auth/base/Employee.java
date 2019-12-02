@@ -14,7 +14,7 @@ public abstract class Employee extends User implements Messaging, Serializable {
         messages = new ArrayList<>();
     }
 
-    public Employee(int salary, String login, String firstName, String lastName) {
+    protected Employee(int salary, String login, String firstName, String lastName) {
         super(login, firstName, lastName);
 
         this.salary = salary;
@@ -31,6 +31,11 @@ public abstract class Employee extends User implements Messaging, Serializable {
     @Override
     public List<Message> getMessages() {
         return messages;
+    }
+
+    @Override
+    public void putMessage(Message message) {
+        this.messages.add(message);
     }
 
     @Override

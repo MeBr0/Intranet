@@ -1,11 +1,12 @@
 package kz.kbtu;
 
-import com.sun.org.apache.xpath.internal.operations.Or;
 import kz.kbtu.auth.base.User;
 import kz.kbtu.auth.main.*;
 import kz.kbtu.auth.type.Degree;
 import kz.kbtu.auth.type.Faculty;
 import kz.kbtu.auth.type.TeacherPosition;
+import kz.kbtu.communication.message.Message;
+import kz.kbtu.communication.message.Messaging;
 import kz.kbtu.communication.news.News;
 import kz.kbtu.communication.order.Order;
 import kz.kbtu.communication.order.OrderStatus;
@@ -73,27 +74,27 @@ public class Intranet {
         System.out.println("You began session as " + user.getClass().getSimpleName());
 
         if (user instanceof Admin) {
-            adminSession((Admin) user);
+            innerSession((Admin) user);
         }
         else if (user instanceof ORManager) {
-            orManagerSession((ORManager) user);
+            innerSession((ORManager) user);
         }
         else if (user instanceof Student) {
-            studentSession((Student) user);
+            innerSession((Student) user);
         }
         else if (user instanceof Teacher) {
-            teacherSession((Teacher) user);
+            innerSession((Teacher) user);
         }
         else if (user instanceof Manager) {
-            managerSession((Manager) user);
+            innerSession((Manager) user);
         }
         else if (user instanceof Executor) {
-            executorSession((Executor) user);
+            innerSession((Executor) user);
         }
     }
 
     /* ---------------------------------------------------- Admin --------------------------------------------------- */
-    private void adminSession(Admin admin) {
+    private void innerSession(Admin admin) {
         LOGGER.enterAdmin(admin);
 
         String answer = "";
@@ -102,25 +103,29 @@ public class Intranet {
             System.out.println("1. Add user");
             System.out.println("2. Remove user");
             System.out.println("3. Show users");
+            System.out.println("4. Change password");
 
             answer = SCANNER.nextLine();
 
             switch (answer) {
                 case "1":
-                    adminAdd(admin);
+                    addUser(admin);
                     break;
                 case "2":
-                    adminRemove(admin);
+                    removeUser(admin);
                     break;
                 case "3":
-                    users();
+                    showUsers();
+                    break;
+                case "4":
+                    changePassword(admin);
                     break;
             }
         }
     }
 
     /* Admin - add */
-    private void adminAdd(Admin admin) {
+    private void addUser(Admin admin) {
         String answer = "";
 
         while (!answer.equals(BACK)) {
@@ -135,22 +140,22 @@ public class Intranet {
 
             switch (answer) {
                 case "1":
-                    adminAddStudent(admin);
+                    addStudent(admin);
                     break;
                 case "2":
-                    adminAddManager(admin);
+                    addManager(admin);
                     break;
                 case "3":
-                    adminAddOrManager(admin);
+                    addORManager(admin);
                     break;
                 case "4":
-                    adminAddTeacher(admin);
+                    addTeacher(admin);
                     break;
                 case "5":
-                    adminAddExecutor(admin);
+                    addExecutor(admin);
                     break;
                 case "6":
-                    adminAddAdmin(admin);
+                    addAdmin(admin);
                     break;
             }
         }
@@ -158,7 +163,7 @@ public class Intranet {
         database.save();
     }
 
-    private void adminAddStudent(Admin admin) {
+    private void addStudent(Admin admin) {
         System.out.println("Type login of user!");
         String login = SCANNER.nextLine();
 
@@ -191,7 +196,7 @@ public class Intranet {
         System.out.println("Student created!");
     }
 
-    private void adminAddManager(Admin admin) {
+    private void addManager(Admin admin) {
         System.out.println("Type login of user!");
         String login = SCANNER.nextLine();
 
@@ -219,7 +224,7 @@ public class Intranet {
         System.out.println("Manager created!");
     }
 
-    private void adminAddOrManager(Admin admin) {
+    private void addORManager(Admin admin) {
         System.out.println("Type login of user!");
         String login = SCANNER.nextLine();
 
@@ -239,7 +244,7 @@ public class Intranet {
         System.out.println("ORManager created!");
     }
 
-    private void adminAddTeacher(Admin admin) {
+    private void addTeacher(Admin admin) {
         System.out.println("Type login of user!");
         String login = SCANNER.nextLine();
 
@@ -275,7 +280,7 @@ public class Intranet {
         System.out.println("Teacher created!");
     }
 
-    private void adminAddExecutor(Admin admin) {
+    private void addExecutor(Admin admin) {
         System.out.println("Type login of user!");
         String login = SCANNER.nextLine();
 
@@ -295,7 +300,7 @@ public class Intranet {
         System.out.println("Executor created!");
     }
 
-    private void adminAddAdmin(Admin admin) {
+    private void addAdmin(Admin admin) {
         System.out.println("Type login of user!");
         String login = SCANNER.nextLine();
 
@@ -313,7 +318,7 @@ public class Intranet {
     }
 
     /* Admin - remove */
-    private void adminRemove(Admin admin) {
+    private void removeUser(Admin admin) {
         String answer = "";
 
         while (!answer.equals(BACK)) {
@@ -336,10 +341,10 @@ public class Intranet {
     }
 
     /* Admin - show */
-    private void users() {
+    private void showUsers() {
         String answer = "";
 
-        while (!answer.equals(BACK)) {
+        while (true) {
             System.out.println("Choose users!");
             System.out.println("1. Students");
             System.out.println("2. Manager");
@@ -376,14 +381,35 @@ public class Intranet {
                     break;
             }
 
-            for (User user: users) {
-                System.out.println(user);
+            for (int i = 0; i < users.size(); ++i) {
+                System.out.println(i+1 + ": " + users.get(i));
             }
+
+            System.out.println("Choose user!");
+
+            answer = SCANNER.nextLine();
+
+            if (answer.equals(BACK))
+                break;
+
+            int index = Integer.parseInt(answer);
+
+            showUser(users.get(index-1));
+        }
+    }
+
+    private void showUser(User user) {
+        System.out.println(user);
+
+        String answer = "";
+
+        while (!answer.equals(BACK)) {
+            answer = SCANNER.nextLine();
         }
     }
 
     /* -------------------------------------------------- ORManager ------------------------------------------------- */
-    private void orManagerSession(ORManager manager) {
+    private void innerSession(ORManager manager) {
         String answer = "";
 
         while (!answer.equals(BACK)) {
@@ -391,28 +417,44 @@ public class Intranet {
             System.out.println("2. Remove course");
             System.out.println("3. Show course");
             System.out.println("4. Offer course");
+            System.out.println("5. Show messages");
+            System.out.println("6. Write message");
+            System.out.println("7. News");
+            System.out.println("8. Change password");
 
             answer = SCANNER.nextLine();
 
             switch (answer) {
                 case "1":
-                    orManagerAdd(manager);
+                    addCourse(manager);
                     break;
                 case "2":
-                    orManagerRemove(manager);
+                    removeCourse(manager);
                     break;
                 case "3":
-                    orManagerShow();
+                    showCourses();
                     break;
                 case "4":
-                    orManagerOffer(manager);
+                    offerCourse(manager);
+                    break;
+                case "5":
+                    showMessages(manager);
+                    break;
+                case "6":
+                    writeMessage(manager);
+                    break;
+                case "7":
+                    showNewses();
+                    break;
+                case "8":
+                    changePassword(manager);
                     break;
             }
         }
     }
 
     /* ORManager - add */
-    private void orManagerAdd(ORManager manager) {
+    private void addCourse(ORManager manager) {
         System.out.println("Type name of course!");
         String name = SCANNER.nextLine();
 
@@ -441,7 +483,7 @@ public class Intranet {
     }
 
     /* ORManager - remove */
-    private void orManagerRemove(ORManager manager) {
+    private void removeCourse(ORManager manager) {
         String answer = "";
 
         while (!answer.equals(BACK)) {
@@ -466,7 +508,7 @@ public class Intranet {
     }
 
     /* ORManager - show */
-    private void orManagerShow() {
+    private void showCourses() {
         List<Course> courses = database.getCourses();
 
         String answer = "";
@@ -481,7 +523,7 @@ public class Intranet {
     }
 
     /* ORManager - offer */
-    private void orManagerOffer(ORManager manager) {
+    private void offerCourse(ORManager manager) {
         System.out.println("Type name of course!");
         String name = SCANNER.nextLine();
 
@@ -518,36 +560,40 @@ public class Intranet {
     }
 
     /* --------------------------------------------------- Student -------------------------------------------------- */
-    private void studentSession(Student student) {
+    private void innerSession(Student student) {
         String answer = "";
 
         while (!answer.equals(BACK)) {
             System.out.println("1. Show courses");
             System.out.println("2. Registration");
-            System.out.println("3. News");
-            System.out.println("4. Transcript");
+            System.out.println("3. Transcript");
+            System.out.println("4. News");
+            System.out.println("5. Change password");
 
             answer = SCANNER.nextLine();
 
             switch (answer) {
                 case "1":
-                    studentCourses(student);
+                    showCourses(student);
                     break;
                 case "2":
-                    studentRegister(student);
+                    registerCourses(student);
                     break;
                 case "3":
-                    newses();
+                    showTranscript(student);
                     break;
                 case "4":
-                    studentTranscript(student);
+                    showNewses();
+                    break;
+                case "5":
+                    changePassword(student);
                     break;
             }
         }
     }
 
     /* Student - courses */
-    private void studentCourses(Student student) {
+    private void showCourses(Student student) {
         List<Course> courses = new ArrayList<>();
 
         for (Course course: student.getCourses()) {
@@ -570,11 +616,11 @@ public class Intranet {
 
             int index = Integer.parseInt(answer);
 
-            studentCourse(student, courses.get(index-1));
+            showCourse(student, courses.get(index-1));
         }
     }
 
-    private void studentCourse(Student student, Course course) {
+    private void showCourse(Student student, Course course) {
         String answer = "";
 
         while (!answer.equals(BACK)) {
@@ -587,22 +633,22 @@ public class Intranet {
 
             switch (answer) {
                 case "1":
-                    courseInfo(course);
+                    showCourseInfo(course);
                     break;
                 case "2":
-                    courseFiles(course);
+                    showFiles(course);
                     break;
                 case "3":
-                    courseTeacher(course);
+                    showTeacherInfo(course);
                     break;
                 case "4":
-                    studentCourseMarks(student, course);
+                    showMarks(student, course);
                     break;
             }
         }
     }
 
-    private void studentCourseMarks(Student student, Course course) {
+    private void showMarks(Student student, Course course) {
         Marks marks = course.getMarks().get(student.getLogin());
 
         System.out.println("Attestation1 : " + marks.getAttestation1().getScore());
@@ -611,7 +657,7 @@ public class Intranet {
     }
 
     /* Student - register */
-    private void studentRegister(Student student) {
+    private void registerCourses(Student student) {
         while (true) {
             List<Course> courses = new ArrayList<>();
 
@@ -634,11 +680,11 @@ public class Intranet {
 
             int index = Integer.parseInt(answer);
 
-            studentRegisterCourse(student, courses.get(index-1));
+            registerCourse(student, courses.get(index-1));
         }
     }
 
-    private void studentRegisterCourse(Student student, Course course) {
+    private void registerCourse(Student student, Course course) {
         course.updateStatus(student.getLogin(), CourseStatus.CURRENT);
         course.openMarks(student.getLogin());
 
@@ -647,7 +693,7 @@ public class Intranet {
     }
 
     /* Student - transcript */
-    private void studentTranscript(Student student) {
+    private void showTranscript(Student student) {
         List<Course> courses = student.getCourses();
 
         for (Course course: courses) {
@@ -660,31 +706,44 @@ public class Intranet {
     }
 
     /* --------------------------------------------------- Teacher -------------------------------------------------- */
-    private void teacherSession(Teacher teacher) {
+    private void innerSession(Teacher teacher) {
         String answer = "";
 
         while (!answer.equals(BACK)) {
             System.out.println("1. Show courses");
-            System.out.println("2. News");
-            System.out.println("3. Write order");
+            System.out.println("2. Write order");
+            System.out.println("3. Show messages");
+            System.out.println("4. Write message");
+            System.out.println("5. News");
+            System.out.println("6. Change password");
 
             answer = SCANNER.nextLine();
 
             switch (answer) {
                 case "1":
-                    teacherCourses(teacher);
+                    showCourses(teacher);
                     break;
                 case "2":
-                    newses();
+                    sendOrder(teacher);
                     break;
                 case "3":
-                    teacherOrder(teacher);
+                    showMessages(teacher);
+                    break;
+                case "4":
+                    writeMessage(teacher);
+                    break;
+                case "5":
+                    showNewses();
+                    break;
+                case "6":
+                    changePassword(teacher);
+                    break;
             }
         }
     }
 
     /* Teacher - courses */
-    private void teacherCourses(Teacher teacher) {
+    private void showCourses(Teacher teacher) {
         List<Course> courses = teacher.getCourses();
 
         while (true) {
@@ -701,11 +760,11 @@ public class Intranet {
 
             int index = Integer.parseInt(answer);
 
-            teacherCourse(teacher, courses.get(index-1));
+            showCourse(teacher, courses.get(index-1));
         }
     }
 
-    private void teacherCourse(Teacher teacher, Course course) {
+    private void showCourse(Teacher teacher, Course course) {
         String answer = "";
 
         while (!answer.equals(BACK)) {
@@ -720,29 +779,29 @@ public class Intranet {
 
             switch (answer) {
                 case "1":
-                    courseInfo(course);
+                    showCourseInfo(course);
                     break;
                 case "2":
-                    courseFiles(course);
+                    showFiles(course);
                     break;
                 case "3":
-                    courseTeacher(course);
+                    showTeacherInfo(course);
                     break;
                 case "4":
-                    courseStudents(course);
+                    showStudents(course);
                     break;
                 case "5":
-                    teacherCourseFile(teacher, course);
+                    uploadFile(teacher, course);
                     break;
                 case "6":
-                    teacherPutMark(teacher, course);
+                    putMarks(teacher, course);
                     break;
             }
         }
     }
 
     /* Teacher - create file */
-    private void teacherCourseFile(Teacher teacher, Course course) {
+    private void uploadFile(Teacher teacher, Course course) {
         System.out.println("Type title of file!");
         String title = SCANNER.nextLine();
 
@@ -759,7 +818,7 @@ public class Intranet {
     }
 
     /* Teacher - put mark */
-    private void teacherPutMark(Teacher teacher, Course course) {
+    private void putMarks(Teacher teacher, Course course) {
         System.out.println("Type login of student!");
         String login = SCANNER.nextLine();
 
@@ -787,7 +846,7 @@ public class Intranet {
     }
 
     /* Teacher - order */
-    private void teacherOrder(Teacher teacher) {
+    private void sendOrder(Teacher teacher) {
         System.out.println("Type title of order!");
         String title = SCANNER.nextLine();
 
@@ -812,27 +871,39 @@ public class Intranet {
     }
 
     /* --------------------------------------------------- Manager -------------------------------------------------- */
-    private void managerSession(Manager manager) {
+    private void innerSession(Manager manager) {
         String answer = "";
 
         while (!answer.equals(BACK)) {
             System.out.println("1. Add news");
-            System.out.println("2. Show news");
+            System.out.println("2. Show messages");
+            System.out.println("3. Write message");
+            System.out.println("4. News");
+            System.out.println("5. Change password");
 
             answer = SCANNER.nextLine();
 
             switch (answer) {
                 case "1":
-                    managerWrite(manager);
+                    writeNews(manager);
                     break;
                 case "2":
-                    newses();
+                    showMessages(manager);
+                    break;
+                case "3":
+                    writeMessage(manager);
+                    break;
+                case "4":
+                    showNewses();
+                    break;
+                case "5":
+                    changePassword(manager);
                     break;
             }
         }
     }
 
-    private void managerWrite(Manager manager) {
+    private void writeNews(Manager manager) {
         System.out.println("Type title of news!");
         String title = SCANNER.nextLine();
 
@@ -847,7 +918,7 @@ public class Intranet {
     }
 
     /* -------------------------------------------------- Executor -------------------------------------------------- */
-    private void executorSession(Executor executor) {
+    private void innerSession(Executor executor) {
         String answer = "";
 
         while (!answer.equals(BACK)) {
@@ -855,31 +926,43 @@ public class Intranet {
             System.out.println("2. Show accepted orders");
             System.out.println("3. Show rejected orders");
             System.out.println("4. Show finished orders");
-            System.out.println("5. Show news");
+            System.out.println("5. Show messages");
+            System.out.println("6. Write message");
+            System.out.println("7. News");
+            System.out.println("8. Change password");
 
             answer = SCANNER.nextLine();
 
             switch (answer) {
                 case "1":
-                    executorOrders(executor, OrderStatus.NEW);
+                    showOrders(executor, OrderStatus.NEW);
                     break;
                 case "2":
-                    executorOrders(executor, OrderStatus.PENDING);
+                    showOrders(executor, OrderStatus.PENDING);
                     break;
                 case "3":
-                    executorOrders(executor, OrderStatus.REJECTED);
+                    showOrders(executor, OrderStatus.REJECTED);
                     break;
                 case "4":
-                    executorOrders(executor, OrderStatus.FINISHED);
+                    showOrders(executor, OrderStatus.FINISHED);
                     break;
                 case "5":
-                    newses();
+                    showMessages(executor);
+                    break;
+                case "6":
+                    writeMessage(executor);
+                    break;
+                case "7":
+                    showNewses();
+                    break;
+                case "8":
+                    changePassword(executor);
                     break;
             }
         }
     }
 
-    private void executorOrders(Executor executor, OrderStatus status) {
+    private void showOrders(Executor executor, OrderStatus status) {
         while (true) {
             List<Order> orders = executor.getOrders(status);
 
@@ -901,11 +984,11 @@ public class Intranet {
 
             int index = Integer.parseInt(answer);
 
-            executorOrder(executor, orders.get(index-1));
+            showOrder(executor, orders.get(index-1));
         }
     }
 
-    private void executorOrder(Executor executor, Order order) {
+    private void showOrder(Executor executor, Order order) {
         String answer;
 
         System.out.println(order);
@@ -972,20 +1055,12 @@ public class Intranet {
         database.save();
     }
 
-    private void executorNew(Executor executor) {
-        List<Order> orders = executor.getOrders();
-
-        for (Order order: orders) {
-            System.out.println(order);
-        }
-    }
-
     /* --------------------------------------------------- Course --------------------------------------------------- */
-    private void courseInfo(Course course) {
+    private void showCourseInfo(Course course) {
         System.out.println(course);
     }
 
-    private void courseFiles(Course course) {
+    private void showFiles(Course course) {
         List<File> files = course.getFiles();
 
         while (true) {
@@ -1002,19 +1077,19 @@ public class Intranet {
 
             int index = Integer.parseInt(answer);
 
-            courseFile(files.get(index-1));
+            showFile(files.get(index-1));
         }
     }
 
-    private void courseFile(File file) {
+    private void showFile(File file) {
         System.out.println(file);
     }
 
-    private void courseTeacher(Course course) {
+    private void showTeacherInfo(Course course) {
         System.out.println(course.getTeacher());
     }
 
-    private void courseStudents(Course course) {
+    private void showStudents(Course course) {
         for (Student student: course.getStudents()) {
             if (course.getStatus(student.getLogin()) == CourseStatus.CURRENT) {
                 Marks marks = course.getMarks(student.getLogin());
@@ -1026,8 +1101,68 @@ public class Intranet {
         }
     }
 
+    /* -------------------------------------------------- Employee -------------------------------------------------- */
+    private void showMessages(Messaging messaging) {
+        while (true) {
+            List<Message> messages = messaging.getMessages();
+
+            if (messages.size() == 0) {
+                System.out.println("Empty!");
+                return;
+            }
+
+            for (int i = 0; i < messages.size(); ++i) {
+                System.out.println(i+1 + ". " + messages.get(i));
+            }
+
+            System.out.println("Choose message!");
+
+            String answer = SCANNER.nextLine();
+
+            if (answer.equals(BACK))
+                break;
+
+            int index = Integer.parseInt(answer);
+
+            showMessage(messages.get(index-1));
+        }
+    }
+
+    private void showMessage(Message message) {
+        System.out.println(message);
+
+        String answer = "";
+
+        while (!answer.equals(BACK)) {
+            answer = SCANNER.nextLine();
+        }
+    }
+
+    private void writeMessage(Messaging messaging) {
+        System.out.println("Type title of message!");
+        String title = SCANNER.nextLine();
+
+        System.out.println("Type text of message!");
+        String text = SCANNER.nextLine();
+
+        System.out.println("Type login of target!");
+        String login = SCANNER.nextLine();
+
+        User user = database.getUser(login);
+
+        if (user instanceof Messaging) {
+            Messaging target = (Messaging) user;
+            messaging.sendMessage(title, text, target);
+            System.out.println("Message sent!");
+            database.save();
+        }
+        else {
+            System.err.println("Cannot send Message!");
+        }
+    }
+
     /* ---------------------------------------------------- News ---------------------------------------------------- */
-    private void newses() {
+    private void showNewses() {
         List<News> newses = database.getNews();
 
         while (true) {
@@ -1044,17 +1179,38 @@ public class Intranet {
 
             int index = Integer.parseInt(answer);
 
-            news(newses.get(index-1));
+            showNews(newses.get(index-1));
         }
     }
 
-    private void news(News news) {
+    private void showNews(News news) {
         System.out.println(news);
 
         String answer = "";
 
         while (!answer.equals(BACK)) {
             answer = SCANNER.nextLine();
+        }
+    }
+
+    /* ----------------------------------------------------- User ----------------------------------------------------*/
+    private void changePassword(User user) {
+        System.out.println("Type current password!");
+        String currentPassword = SCANNER.nextLine();
+
+        System.out.println("Type new password!");
+        String newPassword = SCANNER.nextLine();
+
+        System.out.println("Type new password again!");
+        String newPassword2 = SCANNER.nextLine();
+
+        if (user.checkCredentials(user.getLogin(), currentPassword) && newPassword.equals(newPassword2)) {
+            user.setPassword(newPassword);
+
+            System.out.println("Password changed!");
+        }
+        else {
+            System.err.println("Cannot change password!");
         }
     }
 }
