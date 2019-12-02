@@ -880,15 +880,20 @@ public class Intranet {
     }
 
     private void executorOrders(Executor executor, OrderStatus status) {
-        List<Order> orders = new ArrayList<>();
-
-        for (Order order: executor.getOrders()) {
-            if (order.getStatus() == status) {
-                orders.add(order);
-            }
-        }
-
         while (true) {
+            List<Order> orders = new ArrayList<>();
+
+            for (Order order: executor.getOrders()) {
+                if (order.getStatus() == status) {
+                    orders.add(order);
+                }
+            }
+
+            if (orders.size() == 0) {
+                System.out.println("Empty!");
+                return;
+            }
+
             for (int i = 0; i < orders.size(); ++i) {
                 System.out.println(i+1 + ". " + orders.get(i));
             }
@@ -907,7 +912,7 @@ public class Intranet {
     }
 
     private void executorOrder(Executor executor, Order order) {
-        String answer = "";
+        String answer;
 
         System.out.println(order);
 
@@ -969,6 +974,8 @@ public class Intranet {
                 System.out.println("Order accepted! (now pending)");
             }
         }
+
+        database.save();
     }
 
     private void executorNew(Executor executor) {
