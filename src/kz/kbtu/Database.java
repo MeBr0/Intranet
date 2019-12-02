@@ -16,6 +16,20 @@ import java.util.*;
 @SuppressWarnings("unchecked")
 public class Database {
 
+    private static Database database = null;
+
+    private Database() {
+
+    }
+
+    public static Database getInstance() {
+        if (database == null) {
+            database = new Database();
+        }
+
+        return database;
+    }
+
     public final static Date DEADLINE1 = new GregorianCalendar(2019, Calendar.OCTOBER, 14).getTime();
     public final static Date DEADLINE2 = new GregorianCalendar(2019, Calendar.DECEMBER, 14).getTime();
     public final static Date DEADLINE3 = new GregorianCalendar(2020, Calendar.JANUARY, 10).getTime();

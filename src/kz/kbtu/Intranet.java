@@ -22,24 +22,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+@SuppressWarnings("DuplicatedCode")
 public class Intranet {
 
-    private Database database;
-    private final Scanner SCANNER;
+    private final Database DATABASE;
     private final Logger LOGGER;
+    private final Scanner SCANNER;
 
     private final String BACK = "q";
 
     {
-        database = new Database();
-
-        SCANNER = new Scanner(System.in);
+        DATABASE = Database.getInstance();
         LOGGER = Logger.getInstance();
+        SCANNER = new Scanner(System.in);
     }
 
     public void begin() {
-        database.save();
-        System.out.println(database.getUsers());
+        DATABASE.save();
+        System.out.println(DATABASE.getUsers());
         System.out.println("Welcome to Intranet system!");
 
         int i = 0;
@@ -56,7 +56,7 @@ public class Intranet {
 
             i++;
 
-            User user = database.getUser(login, password);
+            User user = DATABASE.getUser(login, password);
 
             if (user != null) {
                 session(user);
@@ -67,7 +67,7 @@ public class Intranet {
             }
         }
 
-        database.save();
+        DATABASE.save();
     }
 
     private void session(User user) {
@@ -160,7 +160,7 @@ public class Intranet {
             }
         }
 
-        database.save();
+        DATABASE.save();
     }
 
     private void addStudent(Admin admin) {
@@ -174,7 +174,7 @@ public class Intranet {
         String lastName = SCANNER.nextLine();
 
         System.out.println("Choose faculty of student!");
-        Faculty[] faculties = database.getFaculties();
+        Faculty[] faculties = DATABASE.getFaculties();
         for (int i = 0; i < faculties.length; ++i) {
             System.out.println(i+1 + ". " + faculties[i]);
         }
@@ -182,7 +182,7 @@ public class Intranet {
         Faculty faculty = faculties[index-1];
 
         System.out.println("Choose degree of student!");
-        Degree[] degrees = database.getDegrees();
+        Degree[] degrees = DATABASE.getDegrees();
         for (int i = 0; i < degrees.length; ++i) {
             System.out.println(i+1 + ". " + degrees[i]);
         }
@@ -190,7 +190,7 @@ public class Intranet {
         Degree degree = degrees[index-1];
 
         Student student = admin.createStudent(faculty, degree, login, firstName, lastName);
-        database.addUser(student);
+        DATABASE.addUser(student);
 
         LOGGER.createUser(admin, student);
         System.out.println("Student created!");
@@ -207,7 +207,7 @@ public class Intranet {
         String lastName = SCANNER.nextLine();
 
         System.out.println("Choose faculty of manager!");
-        Faculty[] faculties = database.getFaculties();
+        Faculty[] faculties = DATABASE.getFaculties();
         for (int i = 0; i < faculties.length; ++i) {
             System.out.println(i+1 + ". " + faculties[i]);
         }
@@ -218,7 +218,7 @@ public class Intranet {
         int salary = SCANNER.nextInt();
 
         Manager manager = admin.createManager(faculty, salary, login, firstName, lastName);
-        database.addUser(manager);
+        DATABASE.addUser(manager);
 
         LOGGER.createUser(admin, manager);
         System.out.println("Manager created!");
@@ -238,7 +238,7 @@ public class Intranet {
         int salary = SCANNER.nextInt();
 
         ORManager manager = admin.createOrManager(salary, login, firstName, lastName);
-        database.addUser(manager);
+        DATABASE.addUser(manager);
 
         LOGGER.createUser(admin, manager);
         System.out.println("ORManager created!");
@@ -255,7 +255,7 @@ public class Intranet {
         String lastName = SCANNER.nextLine();
 
         System.out.println("Choose faculty of teacher!");
-        Faculty[] faculties = database.getFaculties();
+        Faculty[] faculties = DATABASE.getFaculties();
         for (int i = 0; i < faculties.length; ++i) {
             System.out.println(i+1 + ". " + faculties[i]);
         }
@@ -263,7 +263,7 @@ public class Intranet {
         Faculty faculty = faculties[index-1];
 
         System.out.println("Choose faculty of teacher!");
-        TeacherPosition[] positions = database.getPositions();
+        TeacherPosition[] positions = DATABASE.getPositions();
         for (int i = 0; i < positions.length; ++i) {
             System.out.println(i+1 + ". " + positions[i]);
         }
@@ -274,7 +274,7 @@ public class Intranet {
         int salary = SCANNER.nextInt();
 
         Teacher teacher = admin.createTeacher(faculty, position, salary, login, firstName, lastName);
-        database.addUser(teacher);
+        DATABASE.addUser(teacher);
 
         LOGGER.createUser(admin, teacher);
         System.out.println("Teacher created!");
@@ -294,7 +294,7 @@ public class Intranet {
         int salary = SCANNER.nextInt();
 
         Executor executor = admin.createExecutor(salary, login, firstName, lastName);
-        database.addUser(executor);
+        DATABASE.addUser(executor);
 
         LOGGER.createUser(admin, executor);
         System.out.println("Executor created!");
@@ -311,7 +311,7 @@ public class Intranet {
         String lastName = SCANNER.nextLine();
 
         Admin newAdmin = Admin.createAdmin(login, firstName, lastName);
-        database.addUser(newAdmin);
+        DATABASE.addUser(newAdmin);
 
         LOGGER.createUser(admin, newAdmin);
         System.out.println("Admin created!");
@@ -326,7 +326,7 @@ public class Intranet {
 
             answer = SCANNER.nextLine();
 
-            User result = database.removeUser(answer);
+            User result = DATABASE.removeUser(answer);
 
             if (result != null) {
                 System.out.println("User removed!");
@@ -337,12 +337,12 @@ public class Intranet {
             }
         }
 
-        database.save();
+        DATABASE.save();
     }
 
     /* Show users */
     private void showUsers() {
-        String answer = "";
+        String answer;
 
         while (true) {
             System.out.println("Choose users!");
@@ -359,22 +359,22 @@ public class Intranet {
 
             switch (answer) {
                 case "1":
-                    users = database.getUsers(Student.class);
+                    users = DATABASE.getUsers(Student.class);
                     break;
                 case "2":
-                    users = database.getUsers(Manager.class);
+                    users = DATABASE.getUsers(Manager.class);
                     break;
                 case "3":
-                    users = database.getUsers(ORManager.class);
+                    users = DATABASE.getUsers(ORManager.class);
                     break;
                 case "4":
-                    users = database.getUsers(Teacher.class);
+                    users = DATABASE.getUsers(Teacher.class);
                     break;
                 case "5":
-                    users = database.getUsers(Executor.class);
+                    users = DATABASE.getUsers(Executor.class);
                     break;
                 case "6":
-                    users = database.getUsers(Admin.class);
+                    users = DATABASE.getUsers(Admin.class);
                     break;
                 default:
                     System.out.println("Invalid option!");
@@ -464,18 +464,18 @@ public class Intranet {
         System.out.println("Type credit number of course!");
         int creditNumber = SCANNER.nextInt();
 
-        User user = database.getUser(login);
+        User user = DATABASE.getUser(login);
 
         if (user instanceof Teacher) {
             Teacher teacher = (Teacher) user;
 
             Course course = manager.createCourse(name, creditNumber, teacher);
-            database.addCourse(course);
+            DATABASE.addCourse(course);
 
             LOGGER.createCourse(manager, course);
             System.out.println("Course created!");
 
-            database.save();
+            DATABASE.save();
         }
         else {
             System.err.println("Cannot create Course!");
@@ -491,25 +491,25 @@ public class Intranet {
 
             answer = SCANNER.nextLine();
 
-            Course result = database.removeCourse(answer);
+            Course result = DATABASE.removeCourse(answer);
 
             if (result != null) {
                 System.out.println("Course removed!");
                 LOGGER.removeCourse(manager, result);
 
-                database.save();
+                DATABASE.save();
             }
             else {
                 System.out.println("Cannot find such course!");
             }
         }
 
-        database.save();
+        DATABASE.save();
     }
 
     /* Show courses */
     private void showCourses() {
-        List<Course> courses = database.getCourses();
+        List<Course> courses = DATABASE.getCourses();
 
         String answer = "";
 
@@ -528,7 +528,7 @@ public class Intranet {
         String name = SCANNER.nextLine();
 
         System.out.println("Choose faculty!");
-        Faculty[] faculties = database.getFaculties();
+        Faculty[] faculties = DATABASE.getFaculties();
         for (int i = 0; i < faculties.length; ++i) {
             System.out.println(i+1 + ". " + faculties[i]);
         }
@@ -536,7 +536,7 @@ public class Intranet {
         Faculty faculty = faculties[index-1];
 
         System.out.println("Choose degree!");
-        Degree[] degrees = database.getDegrees();
+        Degree[] degrees = DATABASE.getDegrees();
         for (int i = 0; i < degrees.length; ++i) {
             System.out.println(i+1 + ". " + degrees[i]);
         }
@@ -546,8 +546,8 @@ public class Intranet {
         System.out.println("Type year of study!");
         int yearOfStudy = SCANNER.nextInt();
 
-        Course course = database.getCourse(name);
-        List<Student> students = database.getStudents(yearOfStudy, faculty, degree);
+        Course course = DATABASE.getCourse(name);
+        List<Student> students = DATABASE.getStudents(yearOfStudy, faculty, degree);
 
         if (course != null) {
             manager.offerCourse(course, students);
@@ -555,7 +555,7 @@ public class Intranet {
             LOGGER.offerCourse(manager, course, yearOfStudy, faculty, degree);
             System.out.println("Course offered!");
 
-            database.save();
+            DATABASE.save();
         }
     }
 
@@ -688,7 +688,7 @@ public class Intranet {
         course.updateStatus(student.getLogin(), CourseStatus.CURRENT);
         course.openMarks(student.getLogin());
 
-        database.save();
+        DATABASE.save();
         System.out.println("Course registered!");
     }
 
@@ -818,7 +818,7 @@ public class Intranet {
         System.out.println("File uploaded!");
         LOGGER.uploadFile(teacher, course, file);
 
-        database.save();
+        DATABASE.save();
     }
 
     /* Put marks */
@@ -827,7 +827,7 @@ public class Intranet {
         String login = SCANNER.nextLine();
 
         System.out.println("Choose mode of mark!");
-        MarkMode[] modes = database.getMarkModes();
+        MarkMode[] modes = DATABASE.getMarkModes();
         for (int i = 0; i < modes.length; ++i) {
             System.out.println(i+1 + ". " + modes[i]);
         }
@@ -841,7 +841,7 @@ public class Intranet {
             teacher.putMark(login, course, mode, delta);
             System.out.println("Mark put!");
 
-            database.save();
+            DATABASE.save();
         }
         catch (NotCurrentCourse notCurrentCourse) {
             System.err.println(notCurrentCourse.getMessage());
@@ -860,14 +860,14 @@ public class Intranet {
         System.out.println("Type login of executor!");
         String login = SCANNER.nextLine();
 
-        User user = database.getUser(login);
+        User user = DATABASE.getUser(login);
 
         if (user instanceof Executor) {
             Executor executor = (Executor) user;
             Order order = teacher.sendOrder(title, text, executor);
             System.out.println("Order sent!");
             LOGGER.sendOrder(teacher, order, executor);
-            database.save();
+            DATABASE.save();
         }
         else {
             System.err.println("Cannot create Order!");
@@ -883,10 +883,10 @@ public class Intranet {
         String text = SCANNER.nextLine();
 
         News news = teacher.createNews(title, text);
-        database.addNews(news);
+        DATABASE.addNews(news);
         System.out.println("News created!");
         LOGGER.writeNews(teacher, news);
-        database.save();
+        DATABASE.save();
     }
 
     /* --------------------------------------------------- Manager -------------------------------------------------- */
@@ -931,10 +931,10 @@ public class Intranet {
         String text = SCANNER.nextLine();
 
         News news = manager.createNews(title, text);
-        database.addNews(news);
+        DATABASE.addNews(news);
         System.out.println("News created!");
         LOGGER.writeNews(manager, news);
-        database.save();
+        DATABASE.save();
     }
 
     /* -------------------------------------------------- Executor -------------------------------------------------- */
@@ -1073,7 +1073,7 @@ public class Intranet {
             }
         }
 
-        database.save();
+        DATABASE.save();
     }
 
     /* --------------------------------------------------- Other ---------------------------------------------------- */
@@ -1175,13 +1175,13 @@ public class Intranet {
         System.out.println("Type login of target!");
         String login = SCANNER.nextLine();
 
-        User user = database.getUser(login);
+        User user = DATABASE.getUser(login);
 
         if (user instanceof Messaging) {
             Messaging target = (Messaging) user;
             messaging.sendMessage(title, text, target);
             System.out.println("Message sent!");
-            database.save();
+            DATABASE.save();
         }
         else {
             System.err.println("Cannot send Message!");
@@ -1190,7 +1190,7 @@ public class Intranet {
 
     /* Show newses */
     private void showNewses() {
-        List<News> newses = database.getNews();
+        List<News> newses = DATABASE.getNews();
 
         while (true) {
             for (int i = 0; i < newses.size(); ++i) {
