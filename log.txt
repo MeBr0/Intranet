@@ -70,3 +70,9 @@
 01.12.19 21:10:09 - ORManager or created Course DS
 01.12.19 21:10:15 - ORManager or offered Course DS offered to 1 year of study, FIT faculty, BACHELOR degree students
 01.12.19 21:13:02 - Teacher a.i added File File1 to Course DS
+02.12.19 19:33:12 - Admin admin entered to system!
+02.12.19 19:33:17 - Admin admin created ORManager or
+02.12.19 19:33:28 - Admin admin created Teacher a.i
+02.12.19 19:33:37 - Admin admin created Student a.y
+02.12.19 19:34:24 - ORManager or created Course ds
+02.12.19 19:34:30 - ORManager or offered Course ds offered to 1 year of study, FIT faculty, BACHELOR degree students

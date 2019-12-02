@@ -10,6 +10,8 @@ import kz.kbtu.study.File;
 import kz.kbtu.study.Marks;
 import kz.kbtu.study.course.Course;
 import kz.kbtu.study.course.CourseStatus;
+import kz.kbtu.study.course.MarkMode;
+import kz.kbtu.study.throwable.NotCurrentCourse;
 import kz.kbtu.util.Logger;
 
 import java.util.ArrayList;
@@ -653,6 +655,7 @@ public class Intranet {
             System.out.println("3. Show teacher info");
             System.out.println("4. Show students");
             System.out.println("5. Upload file");
+            System.out.println("6. Put marks");
 
             answer = SCANNER.nextLine();
 
@@ -672,11 +675,14 @@ public class Intranet {
                 case "5":
                     teacherCourseFile(teacher, course);
                     break;
+                case "6":
+                    teacherPutMark(teacher, course);
+                    break;
             }
         }
     }
 
-    /* */
+    /* Teacher - create file*/
     private void teacherCourseFile(Teacher teacher, Course course) {
         System.out.println("Type title of file!");
         String title = SCANNER.nextLine();
@@ -691,6 +697,34 @@ public class Intranet {
         LOGGER.uploadFile(teacher, course, file);
 
         database.save();
+    }
+
+    /* Teacher - put mark*/
+    private void teacherPutMark(Teacher teacher, Course course) {
+        System.out.println("Type login of student!");
+        String login = SCANNER.nextLine();
+
+        System.out.println("Choose mode of mark!");
+        MarkMode[] modes = database.getMarkModes();
+        for (int i = 0; i < modes.length; ++i) {
+            System.out.println(i+1 + ". " + modes[i]);
+        }
+        int index = SCANNER.nextInt();
+        MarkMode mode = modes[index-1];
+
+        System.out.println("Type score to add for student!");
+        double delta = SCANNER.nextDouble();
+
+        try {
+            teacher.putMark(login, course, mode, delta);
+            System.out.println("Mark put!");
+
+            database.save();
+        }
+        catch (NotCurrentCourse notCurrentCourse) {
+            System.err.println(notCurrentCourse.getMessage());
+        }
+
     }
 
     /* Users */
@@ -776,7 +810,13 @@ public class Intranet {
 
     private void courseStudents(Course course) {
         for (Student student: course.getStudents()) {
-            System.out.println(student);
+            if (course.getStatus(student.getLogin()) == CourseStatus.CURRENT) {
+                Marks marks = course.getMarks(student.getLogin());
+
+                System.out.println(String.format("%s [%s] - %.2f : %.2f : %.2f",
+                        student.getFullName(), student.getLogin(), marks.getAttestation1().getScore(),
+                        marks.getAttestation2().getScore(), marks.getFinale().getScore()));
+            }
         }
     }
 

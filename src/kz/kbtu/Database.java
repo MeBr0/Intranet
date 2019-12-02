@@ -8,6 +8,7 @@ import kz.kbtu.auth.type.Faculty;
 import kz.kbtu.auth.type.TeacherPosition;
 import kz.kbtu.communication.news.News;
 import kz.kbtu.study.course.Course;
+import kz.kbtu.study.course.MarkMode;
 
 import java.io.*;
 import java.util.*;
@@ -143,6 +144,10 @@ public class Database {
 
     public Degree[] getDegrees() {
         return new Degree[] {Degree.BACHELOR, Degree.MASTER, Degree.PHILOSOPHY_DOCTOR};
+    }
+
+    public MarkMode[] getMarkModes() {
+        return new MarkMode[] {MarkMode.ATTESTATION1, MarkMode.ATTESTATION2, MarkMode.FINAL};
     }
 
     public TeacherPosition[] getPositions() {

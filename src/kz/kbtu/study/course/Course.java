@@ -4,6 +4,7 @@ import kz.kbtu.auth.main.Student;
 import kz.kbtu.auth.main.Teacher;
 import kz.kbtu.study.File;
 import kz.kbtu.study.Marks;
+import kz.kbtu.study.throwable.DeadlinePassed;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -98,6 +99,25 @@ public class Course implements Serializable {
 
     public Marks getMarks(String login) {
         return marks.get(login);
+    }
+
+    public void putMarks(String login, MarkMode mode, double score) {
+        try {
+            switch (mode) {
+                case ATTESTATION1:
+                    getMarks(login).getAttestation1().updateScore(score);
+                    break;
+                case ATTESTATION2:
+                    getMarks(login).getAttestation2().updateScore(score);
+                    break;
+                case FINAL:
+                    getMarks(login).getFinale().updateScore(score);
+                    break;
+            }
+        }
+        catch (DeadlinePassed deadlinePassed) {
+            System.err.println(deadlinePassed.getMessage());
+        }
     }
 
     public void openMarks(String login) {

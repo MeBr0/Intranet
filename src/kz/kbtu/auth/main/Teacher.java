@@ -7,7 +7,10 @@ import kz.kbtu.communication.news.ManagingNews;
 import kz.kbtu.communication.news.News;
 import kz.kbtu.study.File;
 import kz.kbtu.study.course.Course;
+import kz.kbtu.study.course.CourseStatus;
 import kz.kbtu.study.course.ManagingCourses;
+import kz.kbtu.study.course.MarkMode;
+import kz.kbtu.study.throwable.NotCurrentCourse;
 
 import java.io.Serializable;
 import java.util.*;
@@ -77,6 +80,15 @@ public class Teacher extends Employee implements ManagingCourses, ManagingNews, 
 
     public File createFile(String title, String text) {
         return new File(title, text, getFullName());
+    }
+
+    public void putMark(String login, Course course, MarkMode mode, double score) throws NotCurrentCourse {
+        if (course.getStatus(login) == CourseStatus.CURRENT) {
+            course.putMarks(login, mode, score);
+        }
+        else {
+            throw new NotCurrentCourse(login, course);
+        }
     }
 
     @Override
