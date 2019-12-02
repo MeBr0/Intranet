@@ -141,4 +141,16 @@ public class Logger {
             System.err.println("Cannot write in writeNews()");
         }
     }
+
+    public void writeNews(Teacher teacher, News news) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(LOG, true))) {
+            writer.write(FORMAT.format(LocalDateTime.now()) + " - Teacher " + teacher.getLogin() +
+                    " added News " + news.getTitle() + "\n");
+
+            writer.flush();
+        }
+        catch (IOException e) {
+            System.err.println("Cannot write in writeNews()");
+        }
+    }
 }
