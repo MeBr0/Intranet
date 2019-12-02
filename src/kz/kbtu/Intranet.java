@@ -30,7 +30,7 @@ public class Intranet {
         database = new Database();
 
         SCANNER = new Scanner(System.in);
-        LOGGER = new Logger();
+        LOGGER = Logger.getInstance();
     }
 
     public void begin() {
