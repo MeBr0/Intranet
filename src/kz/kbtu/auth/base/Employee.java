@@ -34,26 +34,11 @@ public abstract class Employee extends User implements Messaging, Serializable {
     }
 
     @Override
-    public Message readMessage(String title) {
-        for (Message message: messages) {
-            if (message.getTitle().equals(title)) {
-                return message;
-            }
-        }
-
-        return null;
-    }
-
-    @Override
-    public void sendMessage(Message message, Messaging target) {
-        target.getMessages().add(message);
-    }
-
-    @Override
-    public Message createMessage(String title, String text) {
+    public void sendMessage(String title, String text, Messaging target) {
         Date timestamp = Calendar.getInstance().getTime();
 
-        return new Message(title, text, this, timestamp);
+        Message message = new Message(title, text, this, timestamp);
+        target.getMessages().add(message);
     }
 
     @Override

@@ -39,17 +39,6 @@ public class Executor extends Employee implements ManagingOrders, Serializable {
     }
 
     @Override
-    public Order getOrder(String title) {
-        for (Order order: orders) {
-            if (order.getTitle().equals(title)) {
-                return order;
-            }
-        }
-
-        return null;
-    }
-
-    @Override
     public void addOrder(Order order) {
         orders.add(order);
     }

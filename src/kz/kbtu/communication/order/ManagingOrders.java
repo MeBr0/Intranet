@@ -5,7 +5,6 @@ import java.util.List;
 public interface ManagingOrders {
     List<Order> getOrders();
     List<Order> getOrders(OrderStatus status);
-    Order getOrder(String title);
     void addOrder(Order order);
     void changeOrderStatus(Order order, OrderStatus status);
 }

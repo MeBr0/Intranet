@@ -1,15 +1,18 @@
 package kz.kbtu.auth.main;
 
 import kz.kbtu.auth.base.Employee;
-import kz.kbtu.auth.type.Degree;
-import kz.kbtu.auth.type.Faculty;
+import kz.kbtu.communication.order.Order;
+import kz.kbtu.communication.order.OrderStatus;
+import kz.kbtu.communication.order.SendingOrders;
 import kz.kbtu.study.course.Course;
 import kz.kbtu.study.course.CourseStatus;
 import kz.kbtu.study.throwable.CreditOverflow;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
-public class ORManager extends Employee {
+public class ORManager extends Employee implements SendingOrders {
 
     public ORManager(int salary, String login, String firstName, String lastName) {
         super(salary, login, firstName, lastName);
@@ -37,6 +40,17 @@ public class ORManager extends Employee {
         catch (CreditOverflow e) {
             System.err.println("Cannot offer course!");
         }
+    }
+
+    @Override
+    public Order sendOrder(String title, String text, Executor executor) {
+        Date timestamp = Calendar.getInstance().getTime();
+
+        Order order = new Order(OrderStatus.NEW, title, text, this, timestamp);
+
+        executor.addOrder(order);
+
+        return order;
     }
 
     @Override
