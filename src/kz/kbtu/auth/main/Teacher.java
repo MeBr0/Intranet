@@ -70,19 +70,6 @@ public class Teacher extends Employee implements ManagingCourses, ManagingNews, 
     }
 
     @Override
-    public boolean removeCourse(String name) {
-        for (Course course: this.courses) {
-            if (course.getName().equals(name)) {
-                courses.remove(course);
-
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    @Override
     public Order sendOrder(String title, String text, Executor executor) {
         Date timestamp = Calendar.getInstance().getTime();
 

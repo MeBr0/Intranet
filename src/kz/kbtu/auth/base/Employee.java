@@ -43,7 +43,7 @@ public abstract class Employee extends User implements Messaging, Serializable {
         Date timestamp = Calendar.getInstance().getTime();
 
         Message message = new Message(title, text, this, timestamp);
-        target.getMessages().add(message);
+        target.putMessage(message);
     }
 
     @Override

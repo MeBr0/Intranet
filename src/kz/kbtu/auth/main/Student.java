@@ -103,19 +103,6 @@ public class Student extends User implements ManagingCourses, Serializable {
     }
 
     @Override
-    public boolean removeCourse(String name) {
-        for (Course course: this.courses) {
-            if (course.getName().equals(name)) {
-                courses.remove(course);
-
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    @Override
     public String toString() {
         return String.format("Student: { id: %s, yearOfStudy: %d, gpa: %.2f, faculty: %s, degree: %s, %s }",
                 id, yearOfStudy, gpa, faculty, degree, super.toString());

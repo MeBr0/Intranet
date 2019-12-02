@@ -7,5 +7,4 @@ import java.util.List;
 public interface ManagingCourses {
     List<Course> getCourses();
     void addCourse(Course course) throws CreditOverflow;
-    boolean removeCourse(String name);
 }

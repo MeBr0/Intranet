@@ -49,46 +49,21 @@ public class Database {
 //        users.add(admin);
     }
 
+    public void load() {
+        loadUsers();
+        loadCourses();
+        loadNews();
+    }
+
+    public void save() {
+        saveUsers();
+        saveCourses();
+        saveNews();
+    }
+
+    /* ---------------------------------------------------- Users ----------------------------------------------------*/
     public List<User> getUsers() {
         return users;
-    }
-
-    public List<Course> getCourses() {
-        return courses;
-    }
-
-    public Course getCourse(String name) {
-        for (Course course: courses) {
-            if (course.getName().equals(name)) {
-                return course;
-            }
-        }
-
-        return null;
-    }
-
-    public void addCourse(Course course) {
-        this.courses.add(course);
-    }
-
-    public Course removeCourse(String name) {
-        for (Course course: courses) {
-            if (course.getName().equals(name)) {
-                courses.remove(course);
-
-                return course;
-            }
-        }
-
-        return null;
-    }
-
-    public List<News> getNews() {
-        return news;
-    }
-
-    public void addNews(News news) {
-        this.news.add(news);
     }
 
     public void addUser(User user) {
@@ -156,45 +131,84 @@ public class Database {
         return students;
     }
 
+    /* --------------------------------------------------- Courses ---------------------------------------------------*/
+    public List<Course> getCourses() {
+        return courses;
+    }
+
+    public Course getCourse(String name) {
+        for (Course course: courses) {
+            if (course.getName().equals(name)) {
+                return course;
+            }
+        }
+
+        return null;
+    }
+
+    public void addCourse(Course course) {
+        this.courses.add(course);
+    }
+
+    public Course removeCourse(String name) {
+        for (Course course: courses) {
+            if (course.getName().equals(name)) {
+                courses.remove(course);
+
+                return course;
+            }
+        }
+
+        return null;
+    }
+
+    /* ----------------------------------------------------- News ----------------------------------------------------*/
+    public List<News> getNews() {
+        return news;
+    }
+
+    public void addNews(News news) {
+        this.news.add(news);
+    }
+
+    /* ---------------------------------------------------- Enums ----------------------------------------------------*/
     public Faculty[] getFaculties() {
-        return new Faculty[] {Faculty.FIT, Faculty.BS, Faculty.FGA, Faculty.FOGI, Faculty.ISE, Faculty.MCM, Faculty.KMA};
+        return new Faculty[] {
+                Faculty.FIT, Faculty.BS, Faculty.FGA, Faculty.FOGI, Faculty.ISE, Faculty.MCM, Faculty.KMA
+        };
     }
 
     public Degree[] getDegrees() {
-        return new Degree[] {Degree.BACHELOR, Degree.MASTER, Degree.PHILOSOPHY_DOCTOR};
+        return new Degree[] {
+                Degree.BACHELOR, Degree.MASTER, Degree.PHILOSOPHY_DOCTOR
+        };
     }
 
     public MarkMode[] getMarkModes() {
-        return new MarkMode[] {MarkMode.ATTESTATION1, MarkMode.ATTESTATION2, MarkMode.FINAL};
+        return new MarkMode[] {
+                MarkMode.ATTESTATION1, MarkMode.ATTESTATION2, MarkMode.FINAL
+        };
     }
 
     public TeacherPosition[] getPositions() {
-        return new TeacherPosition[] {TeacherPosition.TUTOR, TeacherPosition.LECTURER, TeacherPosition.PROFESSOR,
-                TeacherPosition.SENIOR_LECTURER};
-    }
-    public void load() {
-        loadUsers();
-        loadCourses();
-        loadNews();
+        return new TeacherPosition[] {
+                TeacherPosition.TUTOR, TeacherPosition.LECTURER, TeacherPosition.PROFESSOR,
+                TeacherPosition.SENIOR_LECTURER
+        };
     }
 
-    public void save() {
-        saveUsers();
-        saveCourses();
-        saveNews();
-    }
-
+    /* ----------------------------------------------------- Load ----------------------------------------------------*/
     private void loadUsers() {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(USER))) {
             users = (ArrayList<User>) ois.readObject();
         }
         catch (ClassNotFoundException e) {
             users = new ArrayList<>();
-            System.out.println(USER + ": ClassNotFoundException");
+            System.err.println(USER + ": ClassNotFoundException");
         }
         catch (IOException e) {
             users = new ArrayList<>();
-            System.out.println(USER + ": IOException");
+            System.err.println(USER + ": IOException");
         }
     }
 
@@ -204,11 +218,11 @@ public class Database {
         }
         catch (ClassNotFoundException e) {
             courses = new ArrayList<>();
-            System.out.println(COURSE + ": ClassNotFoundException");
+            System.err.println(COURSE + ": ClassNotFoundException");
         }
         catch (IOException e) {
             courses = new ArrayList<>();
-            System.out.println(COURSE + ": IOException");
+            System.err.println(COURSE + ": IOException");
         }
     }
 
@@ -218,14 +232,15 @@ public class Database {
         }
         catch (ClassNotFoundException e) {
             news = new ArrayList<>();
-            System.out.println(NEWS + ": ClassNotFoundException");
+            System.err.println(NEWS + ": ClassNotFoundException");
         }
         catch (IOException e) {
             news = new ArrayList<>();
-            System.out.println(NEWS + ": IOException");
+            System.err.println(NEWS + ": IOException");
         }
     }
 
+    /* ----------------------------------------------------- Save ----------------------------------------------------*/
     private void saveUsers() {
         try (ObjectOutputStream oot = new ObjectOutputStream(new FileOutputStream(USER))) {
             oot.writeObject(users);
@@ -233,7 +248,7 @@ public class Database {
             oot.flush();
         }
         catch (IOException e) {
-            System.out.println(USER + ": IOException");
+            System.err.println(USER + ": IOException");
         }
     }
 
@@ -244,7 +259,7 @@ public class Database {
             oot.flush();
         }
         catch (IOException e) {
-            System.out.println(COURSE + ": IOException");
+            System.err.println(COURSE + ": IOException");
         }
     }
 
@@ -255,7 +270,7 @@ public class Database {
             oot.flush();
         }
         catch (IOException e) {
-            System.out.println(NEWS + ": IOException");
+            System.err.println(NEWS + ": IOException");
         }
     }
 }

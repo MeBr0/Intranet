@@ -21,11 +21,6 @@ public class Executor extends Employee implements ManagingOrders, Serializable {
     }
 
     @Override
-    public List<Order> getOrders() {
-        return orders;
-    }
-
-    @Override
     public List<Order> getOrders(OrderStatus status) {
         List<Order> orders = new ArrayList<>();
 
