@@ -1,5 +1,6 @@
 package kz.kbtu;
 
+import com.sun.org.apache.xpath.internal.operations.Or;
 import kz.kbtu.auth.base.User;
 import kz.kbtu.auth.main.*;
 import kz.kbtu.auth.type.Degree;
@@ -7,6 +8,7 @@ import kz.kbtu.auth.type.Faculty;
 import kz.kbtu.auth.type.TeacherPosition;
 import kz.kbtu.communication.news.News;
 import kz.kbtu.communication.order.Order;
+import kz.kbtu.communication.order.OrderStatus;
 import kz.kbtu.study.File;
 import kz.kbtu.study.Marks;
 import kz.kbtu.study.course.Course;
@@ -850,17 +852,121 @@ public class Intranet {
 
         while (!answer.equals(BACK)) {
             System.out.println("1. Show new orders");
-            System.out.println("2. Show news");
+            System.out.println("2. Show accepted orders");
+            System.out.println("3. Show rejected orders");
+            System.out.println("4. Show finished orders");
+            System.out.println("5. Show news");
 
             answer = SCANNER.nextLine();
 
             switch (answer) {
                 case "1":
-                    executorNew(executor);
+                    executorOrders(executor, OrderStatus.NEW);
                     break;
                 case "2":
+                    executorOrders(executor, OrderStatus.PENDING);
+                    break;
+                case "3":
+                    executorOrders(executor, OrderStatus.REJECTED);
+                    break;
+                case "4":
+                    executorOrders(executor, OrderStatus.FINISHED);
+                    break;
+                case "5":
                     newses();
                     break;
+            }
+        }
+    }
+
+    private void executorOrders(Executor executor, OrderStatus status) {
+        List<Order> orders = new ArrayList<>();
+
+        for (Order order: executor.getOrders()) {
+            if (order.getStatus() == status) {
+                orders.add(order);
+            }
+        }
+
+        while (true) {
+            for (int i = 0; i < orders.size(); ++i) {
+                System.out.println(i+1 + ". " + orders.get(i));
+            }
+
+            System.out.println("Choose order!");
+
+            String answer = SCANNER.nextLine();
+
+            if (answer.equals(BACK))
+                break;
+
+            int index = Integer.parseInt(answer);
+
+            executorOrder(executor, orders.get(index-1));
+        }
+    }
+
+    private void executorOrder(Executor executor, Order order) {
+        String answer = "";
+
+        System.out.println(order);
+
+        if (order.getStatus() == OrderStatus.NEW) {
+            System.out.println("This is new order! Do you accept or reject?");
+            System.out.println("1. Accept order");
+            System.out.println("2. Reject order");
+
+            answer = SCANNER.nextLine();
+
+            switch (answer) {
+                case "1":
+                    order.setStatus(OrderStatus.PENDING);
+                    System.out.println("Order accepted! (now pending)");
+                    break;
+                case "2":
+                    order.setStatus(OrderStatus.REJECTED);
+                    System.out.println("Order rejected!");
+                    break;
+            }
+        }
+        else if (order.getStatus() == OrderStatus.PENDING) {
+            System.out.println("This is pending order! Do you finished it?");
+            System.out.println("1. Finish order");
+            System.out.println("2. Reject order");
+
+            answer = SCANNER.nextLine();
+
+            switch (answer) {
+                case "1":
+                    order.setStatus(OrderStatus.FINISHED);
+                    System.out.println("Order finished!");
+                    break;
+                case "2":
+                    order.setStatus(OrderStatus.REJECTED);
+                    System.out.println("Order rejected!");
+                    break;
+            }
+        }
+        else if (order.getStatus() == OrderStatus.REJECTED) {
+            System.out.println("This is rejected order! Do you accept it?");
+            System.out.println("1. Accept order");
+
+            answer = SCANNER.nextLine();
+
+            if ("1".equals(answer)) {
+                order.setStatus(OrderStatus.PENDING);
+                System.out.println("Order accepted! (now pending)");
+            }
+        }
+        else {
+            System.out.println("This is finished order! Do you undone it?");
+            System.out.println("1. Undone order");
+
+            answer = SCANNER.nextLine();
+
+            if ("1".equals(answer)) {
+                order.setStatus(OrderStatus.PENDING);
+                System.out.println("Order accepted! (now pending)");
             }
         }
     }
