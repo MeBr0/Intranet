@@ -76,3 +76,7 @@
 02.12.19 19:33:37 - Admin admin created Student a.y
 02.12.19 19:34:24 - ORManager or created Course ds
 02.12.19 19:34:30 - ORManager or offered Course ds offered to 1 year of study, FIT faculty, BACHELOR degree students
+02.12.19 20:04:27 - Admin admin entered to system!
+02.12.19 20:04:38 - Admin admin created Manager man
+02.12.19 20:05:12 - Manager man added News First december
+02.12.19 20:07:00 - Manager man added News qwe

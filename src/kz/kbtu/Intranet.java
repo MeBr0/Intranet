@@ -81,9 +81,12 @@ public class Intranet {
         else if (user instanceof Teacher) {
             teacherSession((Teacher) user);
         }
+        else if (user instanceof Manager) {
+            managerSession((Manager) user);
+        }
     }
 
-    /* Admin */
+    /* ---------------------------------------------------- Admin --------------------------------------------------- */
     private void adminSession(Admin admin) {
         LOGGER.enterAdmin(admin);
 
@@ -326,7 +329,54 @@ public class Intranet {
         database.save();
     }
 
-    /* ORManager */
+    /* Admin - show */
+    private void users() {
+        String answer = "";
+
+        while (!answer.equals(BACK)) {
+            System.out.println("Choose users!");
+            System.out.println("1. Students");
+            System.out.println("2. Manager");
+            System.out.println("3. ORManagers");
+            System.out.println("4. Teachers");
+            System.out.println("5. Executors");
+            System.out.println("6. Admins");
+
+            answer = SCANNER.nextLine();
+
+            List<User> users = new ArrayList<>();
+
+            switch (answer) {
+                case "1":
+                    users = database.getUsers(Student.class);
+                    break;
+                case "2":
+                    users = database.getUsers(Manager.class);
+                    break;
+                case "3":
+                    users = database.getUsers(ORManager.class);
+                    break;
+                case "4":
+                    users = database.getUsers(Teacher.class);
+                    break;
+                case "5":
+                    users = database.getUsers(Executor.class);
+                    break;
+                case "6":
+                    users = database.getUsers(Admin.class);
+                    break;
+                default:
+                    System.out.println("Invalid option!");
+                    break;
+            }
+
+            for (User user: users) {
+                System.out.println(user);
+            }
+        }
+    }
+
+    /* -------------------------------------------------- ORManager ------------------------------------------------- */
     private void orManagerSession(ORManager manager) {
         String answer = "";
 
@@ -461,7 +511,7 @@ public class Intranet {
         }
     }
 
-    /* Student */
+    /* --------------------------------------------------- Student -------------------------------------------------- */
     private void studentSession(Student student) {
         String answer = "";
 
@@ -481,7 +531,7 @@ public class Intranet {
                     studentRegister(student);
                     break;
                 case "3":
-                    news();
+                    newses();
                     break;
                 case "4":
                     studentTranscript(student);
@@ -603,7 +653,7 @@ public class Intranet {
         }
     }
 
-    /* Teacher */
+    /* --------------------------------------------------- Teacher -------------------------------------------------- */
     private void teacherSession(Teacher teacher) {
         String answer = "";
 
@@ -618,7 +668,7 @@ public class Intranet {
                     teacherCourses(teacher);
                     break;
                 case "2":
-                    news();
+                    newses();
                     break;
             }
         }
@@ -727,54 +777,42 @@ public class Intranet {
 
     }
 
-    /* Users */
-    private void users() {
+    /* --------------------------------------------------- Manager -------------------------------------------------- */
+    private void managerSession(Manager manager) {
         String answer = "";
 
         while (!answer.equals(BACK)) {
-            System.out.println("Choose users!");
-            System.out.println("1. Students");
-            System.out.println("2. Manager");
-            System.out.println("3. ORManagers");
-            System.out.println("4. Teachers");
-            System.out.println("5. Executors");
-            System.out.println("6. Admins");
+            System.out.println("1. Add news");
+            System.out.println("1. Show news");
 
             answer = SCANNER.nextLine();
 
-            List<User> users = new ArrayList<>();
-
             switch (answer) {
                 case "1":
-                    users = database.getUsers(Student.class);
+                    managerWrite(manager);
                     break;
                 case "2":
-                    users = database.getUsers(Manager.class);
+                    newses();
                     break;
-                case "3":
-                    users = database.getUsers(ORManager.class);
-                    break;
-                case "4":
-                    users = database.getUsers(Teacher.class);
-                    break;
-                case "5":
-                    users = database.getUsers(Executor.class);
-                    break;
-                case "6":
-                    users = database.getUsers(Admin.class);
-                    break;
-                default:
-                    System.out.println("Invalid option!");
-                    break;
-            }
-
-            for (User user: users) {
-                System.out.println(user);
             }
         }
     }
 
-    /* Course */
+    private void managerWrite(Manager manager) {
+        System.out.println("Type title of news!");
+        String title = SCANNER.nextLine();
+
+        System.out.println("Type text of news!");
+        String text = SCANNER.nextLine();
+
+        News news = manager.createNews(title, text);
+        database.addNews(news);
+        System.out.println("News created!");
+        LOGGER.writeNews(manager, news);
+        database.save();
+    }
+
+    /* --------------------------------------------------- Course --------------------------------------------------- */
     private void courseInfo(Course course) {
         System.out.println(course);
     }
@@ -820,13 +858,35 @@ public class Intranet {
         }
     }
 
-    /* News */
-    private void news() {
-        // TODO: Доработать
+    /* ---------------------------------------------------- News ---------------------------------------------------- */
+    private void newses() {
         List<News> newses = database.getNews();
 
-        for (News news: newses) {
-            System.out.println(news);
+        while (true) {
+            for (int i = 0; i < newses.size(); ++i) {
+                System.out.println(i+1 + ": " + newses.get(i));
+            }
+
+            System.out.println("Choose news!");
+
+            String answer = SCANNER.nextLine();
+
+            if (answer.equals(BACK))
+                break;
+
+            int index = Integer.parseInt(answer);
+
+            news(newses.get(index-1));
+        }
+    }
+
+    private void news(News news) {
+        System.out.println(news);
+
+        String answer = "";
+
+        while (!answer.equals(BACK)) {
+            answer = SCANNER.nextLine();
         }
     }
 }

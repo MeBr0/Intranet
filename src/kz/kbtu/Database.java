@@ -73,6 +73,10 @@ public class Database {
         return news;
     }
 
+    public void addNews(News news) {
+        this.news.add(news);
+    }
+
     public void addUser(User user) {
         this.users.add(user);
     }

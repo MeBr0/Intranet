@@ -2,10 +2,12 @@ package kz.kbtu.util;
 
 import kz.kbtu.auth.base.User;
 import kz.kbtu.auth.main.Admin;
+import kz.kbtu.auth.main.Manager;
 import kz.kbtu.auth.main.ORManager;
 import kz.kbtu.auth.main.Teacher;
 import kz.kbtu.auth.type.Degree;
 import kz.kbtu.auth.type.Faculty;
+import kz.kbtu.communication.news.News;
 import kz.kbtu.study.File;
 import kz.kbtu.study.course.Course;
 
@@ -31,7 +33,7 @@ public class Logger {
     }
 
     private final String LOG = "log.txt";
-    private DateTimeFormatter FORMAT = DateTimeFormatter.ofPattern("dd.MM.yy HH:mm:ss");
+    private final DateTimeFormatter FORMAT = DateTimeFormatter.ofPattern("dd.MM.yy HH:mm:ss");
 
     public void enterAdmin(Admin admin) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(LOG, true))) {
@@ -115,6 +117,18 @@ public class Logger {
         }
         catch (IOException e) {
             System.err.println("Cannot write in uploadFile()");
+        }
+    }
+
+    public void writeNews(Manager manager, News news) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(LOG, true))) {
+            writer.write(FORMAT.format(LocalDateTime.now()) + " - Manager " + manager.getLogin() +
+                    " added News " + news.getTitle() + "\n");
+
+            writer.flush();
+        }
+        catch (IOException e) {
+            System.err.println("Cannot write in writeNews()");
         }
     }
 }
