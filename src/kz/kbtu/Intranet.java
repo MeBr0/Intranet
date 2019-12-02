@@ -6,6 +6,7 @@ import kz.kbtu.auth.type.Degree;
 import kz.kbtu.auth.type.Faculty;
 import kz.kbtu.auth.type.TeacherPosition;
 import kz.kbtu.communication.news.News;
+import kz.kbtu.communication.order.Order;
 import kz.kbtu.study.File;
 import kz.kbtu.study.Marks;
 import kz.kbtu.study.course.Course;
@@ -83,6 +84,9 @@ public class Intranet {
         }
         else if (user instanceof Manager) {
             managerSession((Manager) user);
+        }
+        else if (user instanceof Executor) {
+            executorSession((Executor) user);
         }
     }
 
@@ -660,6 +664,7 @@ public class Intranet {
         while (!answer.equals(BACK)) {
             System.out.println("1. Show courses");
             System.out.println("2. News");
+            System.out.println("3. Write order");
 
             answer = SCANNER.nextLine();
 
@@ -670,6 +675,8 @@ public class Intranet {
                 case "2":
                     newses();
                     break;
+                case "3":
+                    teacherOrder(teacher);
             }
         }
     }
@@ -732,7 +739,7 @@ public class Intranet {
         }
     }
 
-    /* Teacher - create file*/
+    /* Teacher - create file */
     private void teacherCourseFile(Teacher teacher, Course course) {
         System.out.println("Type title of file!");
         String title = SCANNER.nextLine();
@@ -749,7 +756,7 @@ public class Intranet {
         database.save();
     }
 
-    /* Teacher - put mark*/
+    /* Teacher - put mark */
     private void teacherPutMark(Teacher teacher, Course course) {
         System.out.println("Type login of student!");
         String login = SCANNER.nextLine();
@@ -777,13 +784,38 @@ public class Intranet {
 
     }
 
+    /* Teacher - order */
+    private void teacherOrder(Teacher teacher) {
+        System.out.println("Type title of order!");
+        String title = SCANNER.nextLine();
+
+        System.out.println("Type text of order!");
+        String text = SCANNER.nextLine();
+
+        System.out.println("Type login of executor!");
+        String login = SCANNER.nextLine();
+
+        User user = database.getUser(login);
+
+        if (user instanceof Executor) {
+            Executor executor = (Executor) user;
+            Order order = teacher.sendOrder(title, text, executor);
+            System.out.println("Order sent!");
+            LOGGER.sendOrder(teacher, order, executor);
+            database.save();
+        }
+        else {
+            System.err.println("Cannot create Order!");
+        }
+    }
+
     /* --------------------------------------------------- Manager -------------------------------------------------- */
     private void managerSession(Manager manager) {
         String answer = "";
 
         while (!answer.equals(BACK)) {
             System.out.println("1. Add news");
-            System.out.println("1. Show news");
+            System.out.println("2. Show news");
 
             answer = SCANNER.nextLine();
 
@@ -810,6 +842,35 @@ public class Intranet {
         System.out.println("News created!");
         LOGGER.writeNews(manager, news);
         database.save();
+    }
+
+    /* -------------------------------------------------- Executor -------------------------------------------------- */
+    private void executorSession(Executor executor) {
+        String answer = "";
+
+        while (!answer.equals(BACK)) {
+            System.out.println("1. Show new orders");
+            System.out.println("2. Show news");
+
+            answer = SCANNER.nextLine();
+
+            switch (answer) {
+                case "1":
+                    executorNew(executor);
+                    break;
+                case "2":
+                    newses();
+                    break;
+            }
+        }
+    }
+
+    private void executorNew(Executor executor) {
+        List<Order> orders = executor.getOrders();
+
+        for (Order order: orders) {
+            System.out.println(order);
+        }
     }
 
     /* --------------------------------------------------- Course --------------------------------------------------- */

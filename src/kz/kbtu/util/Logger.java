@@ -1,13 +1,11 @@
 package kz.kbtu.util;
 
 import kz.kbtu.auth.base.User;
-import kz.kbtu.auth.main.Admin;
-import kz.kbtu.auth.main.Manager;
-import kz.kbtu.auth.main.ORManager;
-import kz.kbtu.auth.main.Teacher;
+import kz.kbtu.auth.main.*;
 import kz.kbtu.auth.type.Degree;
 import kz.kbtu.auth.type.Faculty;
 import kz.kbtu.communication.news.News;
+import kz.kbtu.communication.order.Order;
 import kz.kbtu.study.File;
 import kz.kbtu.study.course.Course;
 
@@ -117,6 +115,18 @@ public class Logger {
         }
         catch (IOException e) {
             System.err.println("Cannot write in uploadFile()");
+        }
+    }
+
+    public void sendOrder(Teacher teacher, Order order, Executor executor) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(LOG, true))) {
+            writer.write(FORMAT.format(LocalDateTime.now()) + " - Teacher " + teacher.getLogin() +
+                    " send Order " + order.getTitle() + " to Executor " + executor.getLogin() + "\n");
+
+            writer.flush();
+        }
+        catch (IOException e) {
+            System.err.println("Cannot write in sendOrder()");
         }
     }
 

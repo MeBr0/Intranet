@@ -5,6 +5,9 @@ import kz.kbtu.auth.type.Faculty;
 import kz.kbtu.auth.type.TeacherPosition;
 import kz.kbtu.communication.news.ManagingNews;
 import kz.kbtu.communication.news.News;
+import kz.kbtu.communication.order.CreatingOrders;
+import kz.kbtu.communication.order.Order;
+import kz.kbtu.communication.order.OrderStatus;
 import kz.kbtu.study.File;
 import kz.kbtu.study.course.Course;
 import kz.kbtu.study.course.CourseStatus;
@@ -15,7 +18,7 @@ import kz.kbtu.study.throwable.NotCurrentCourse;
 import java.io.Serializable;
 import java.util.*;
 
-public class Teacher extends Employee implements ManagingCourses, ManagingNews, Serializable {
+public class Teacher extends Employee implements ManagingCourses, ManagingNews, Serializable, CreatingOrders {
     private Faculty faculty;
     private TeacherPosition position;
     private List<Course> courses;
@@ -76,6 +79,17 @@ public class Teacher extends Employee implements ManagingCourses, ManagingNews, 
         }
 
         return false;
+    }
+
+    @Override
+    public Order sendOrder(String title, String text, Executor executor) {
+        Date timestamp = Calendar.getInstance().getTime();
+
+        Order order = new Order(OrderStatus.NEW, title, text, this, timestamp);
+
+        executor.addOrder(order);
+
+        return order;
     }
 
     public File createFile(String title, String text) {

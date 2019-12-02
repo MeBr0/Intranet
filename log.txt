@@ -80,3 +80,16 @@
 02.12.19 20:04:38 - Admin admin created Manager man
 02.12.19 20:05:12 - Manager man added News First december
 02.12.19 20:07:00 - Manager man added News qwe
+02.12.19 20:32:48 - Admin admin entered to system!
+02.12.19 20:33:00 - Admin admin created Executor exe
+02.12.19 20:33:11 - Admin admin created Teacher a.i
+02.12.19 20:33:40 - Teacher a.i send Order New
+02.12.19 20:45:54 - Admin admin entered to system!
+02.12.19 20:46:04 - Admin admin created Executor exe
+02.12.19 20:46:14 - Admin admin created Teacher qwe
+02.12.19 20:46:30 - Teacher qwe send Order QWE
+02.12.19 20:47:55 - Teacher qwe send Order QWEr
+02.12.19 20:59:58 - Admin admin entered to system!
+02.12.19 21:00:05 - Admin admin created Executor exe
+02.12.19 21:00:12 - Admin admin created Teacher a.i
+02.12.19 21:00:29 - Teacher a.i send Order QWE to Executor exe

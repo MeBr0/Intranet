@@ -10,9 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Executor extends Employee implements ManagingOrders, Serializable {
-    private static List<Order> orders;
+    public List<Order> orders;
 
-    static  {
+    {
         orders = new ArrayList<>();
     }
 
@@ -29,7 +29,7 @@ public class Executor extends Employee implements ManagingOrders, Serializable {
     public List<Order> getOrders(OrderStatus status) {
         List<Order> orders = new ArrayList<>();
 
-        for (Order order: Executor.orders) {
+        for (Order order: this.orders) {
             if (order.getStatus() == status) {
                 orders.add(order);
             }
