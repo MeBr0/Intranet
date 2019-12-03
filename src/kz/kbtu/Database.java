@@ -45,6 +45,8 @@ public class Database {
     {
         load();
 
+//        this.users.clear();;
+
 //        Admin admin = Admin.createAdmin("admin", "", "");
 //        users.add(admin);
     }
@@ -53,6 +55,8 @@ public class Database {
         loadUsers();
         loadCourses();
         loadNews();
+
+        Student.count = getUsers(Student.class).size();
     }
 
     public void save() {
@@ -129,6 +133,16 @@ public class Database {
         }
 
         return students;
+    }
+
+    public boolean isValidLogin(String login) {
+        for (User user: this.users) {
+            if (user.getLogin().equals(login)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /* --------------------------------------------------- Courses ---------------------------------------------------*/

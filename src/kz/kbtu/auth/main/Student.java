@@ -9,9 +9,7 @@ import kz.kbtu.study.course.ManagingCourses;
 import kz.kbtu.study.throwable.CreditOverflow;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class Student extends User implements ManagingCourses, Serializable {
 
@@ -24,7 +22,7 @@ public class Student extends User implements ManagingCourses, Serializable {
 
     private final int CREDIT_LIMIT = 21;
 
-    private static int count = 0;
+    public static int count = 0;
 
     {
         courses = new ArrayList<>();
@@ -34,7 +32,7 @@ public class Student extends User implements ManagingCourses, Serializable {
     Student(Faculty faculty, Degree degree, String login, String firstName, String lastName) {
         super(login, firstName, lastName);
 
-        id = "";    // TODO: id generator
+        id = generateId(degree);
         this.faculty = faculty;
         this.degree = degree;
         incrementYearOfStudy();
@@ -100,6 +98,34 @@ public class Student extends User implements ManagingCourses, Serializable {
         else {
             this.courses.add(course);
         }
+    }
+
+    private String generateId(Degree degree) {
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        String yearString = String.valueOf(year).substring(2);
+
+        String degreeString = "";
+
+        switch (degree) {
+            case BACHELOR:
+                degreeString = "BD";
+                break;
+            case MASTER:
+                degreeString = "MD";
+                break;
+            case PHILOSOPHY_DOCTOR:
+                degreeString = "PD";
+                break;
+        }
+
+        StringBuilder builder = new StringBuilder(String.valueOf(count));
+
+        while (builder.length() < 6) {
+            builder.insert(0, "0");
+        }
+
+        return String.format("%s%s%s", yearString, degreeString, builder.toString());
     }
 
     @Override

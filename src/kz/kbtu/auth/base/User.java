@@ -1,5 +1,7 @@
 package kz.kbtu.auth.base;
 
+import kz.kbtu.util.CustomHasher;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -10,7 +12,9 @@ public abstract class User extends Person implements Serializable {
     private String email;
 
     {
-        this.password = "Kbtu111";
+        this.password = CustomHasher.getInstance().hash("Kbtu111");
+
+//        System.out.println("This password " + this.password);
     }
 
     protected User(String login, String firstName, String lastName) {
@@ -24,7 +28,7 @@ public abstract class User extends Person implements Serializable {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        this.password = CustomHasher.getInstance().hash(password);
     }
 
     public String getPhoneNumber() {
@@ -44,7 +48,9 @@ public abstract class User extends Person implements Serializable {
     }
 
     public boolean checkCredentials(String login, String password) {
-        return this.login.equals(login) && this.password.equals(password);
+        String hashedPassword = CustomHasher.getInstance().hash(password);
+
+        return this.login.equals(login) && this.password.equals(hashedPassword);
     }
 
     @Override
@@ -64,6 +70,6 @@ public abstract class User extends Person implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), login, password);
+        return Objects.hash(super.hashCode(), login);
     }
 }
