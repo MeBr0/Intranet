@@ -189,11 +189,17 @@ public class Intranet {
         index = SCANNER.nextInt();
         Degree degree = degrees[index-1];
 
-        Student student = admin.createStudent(faculty, degree, login, firstName, lastName);
-        DATABASE.addUser(student);
+        if (DATABASE.isValidLogin(login)) {
+            Student student = admin.createStudent(faculty, degree, login, firstName, lastName);
+            DATABASE.addUser(student);
 
-        LOGGER.createUser(admin, student);
-        System.out.println("Student created!");
+            LOGGER.createUser(admin, student);
+            System.out.println("Student created!");
+        }
+        else {
+            System.err.println("Such login exists!");
+        }
+
     }
 
     private void addManager(Admin admin) {
@@ -217,11 +223,16 @@ public class Intranet {
         System.out.println("Type salary of employee!");
         int salary = SCANNER.nextInt();
 
-        Manager manager = admin.createManager(faculty, salary, login, firstName, lastName);
-        DATABASE.addUser(manager);
+        if (DATABASE.isValidLogin(login)) {
+            Manager manager = admin.createManager(faculty, salary, login, firstName, lastName);
+            DATABASE.addUser(manager);
 
-        LOGGER.createUser(admin, manager);
-        System.out.println("Manager created!");
+            LOGGER.createUser(admin, manager);
+            System.out.println("Manager created!");
+        }
+        else {
+            System.err.println("Such login exists!");
+        }
     }
 
     private void addORManager(Admin admin) {
@@ -237,11 +248,16 @@ public class Intranet {
         System.out.println("Type salary of employee!");
         int salary = SCANNER.nextInt();
 
-        ORManager manager = admin.createOrManager(salary, login, firstName, lastName);
-        DATABASE.addUser(manager);
+        if (DATABASE.isValidLogin(login)) {
+            ORManager manager = admin.createOrManager(salary, login, firstName, lastName);
+            DATABASE.addUser(manager);
 
-        LOGGER.createUser(admin, manager);
-        System.out.println("ORManager created!");
+            LOGGER.createUser(admin, manager);
+            System.out.println("ORManager created!");
+        }
+        else {
+            System.err.println("Such login exists!");
+        }
     }
 
     private void addTeacher(Admin admin) {
@@ -273,11 +289,16 @@ public class Intranet {
         System.out.println("Type salary of employee!");
         int salary = SCANNER.nextInt();
 
-        Teacher teacher = admin.createTeacher(faculty, position, salary, login, firstName, lastName);
-        DATABASE.addUser(teacher);
+        if (DATABASE.isValidLogin(login)) {
+            Teacher teacher = admin.createTeacher(faculty, position, salary, login, firstName, lastName);
+            DATABASE.addUser(teacher);
 
-        LOGGER.createUser(admin, teacher);
-        System.out.println("Teacher created!");
+            LOGGER.createUser(admin, teacher);
+            System.out.println("Teacher created!");
+        }
+        else {
+            System.err.println("Such login exists!");
+        }
     }
 
     private void addExecutor(Admin admin) {
@@ -293,11 +314,16 @@ public class Intranet {
         System.out.println("Type salary of employee!");
         int salary = SCANNER.nextInt();
 
-        Executor executor = admin.createExecutor(salary, login, firstName, lastName);
-        DATABASE.addUser(executor);
+        if (DATABASE.isValidLogin(login)) {
+            Executor executor = admin.createExecutor(salary, login, firstName, lastName);
+            DATABASE.addUser(executor);
 
-        LOGGER.createUser(admin, executor);
-        System.out.println("Executor created!");
+            LOGGER.createUser(admin, executor);
+            System.out.println("Executor created!");
+        }
+        else {
+            System.err.println("Such login exists!");
+        }
     }
 
     private void addAdmin(Admin admin) {
@@ -310,11 +336,16 @@ public class Intranet {
         System.out.println("Type last name of user!");
         String lastName = SCANNER.nextLine();
 
-        Admin newAdmin = Admin.createAdmin(login, firstName, lastName);
-        DATABASE.addUser(newAdmin);
+        if (DATABASE.isValidLogin(login)) {
+            Admin newAdmin = Admin.createAdmin(login, firstName, lastName);
+            DATABASE.addUser(newAdmin);
 
-        LOGGER.createUser(admin, newAdmin);
-        System.out.println("Admin created!");
+            LOGGER.createUser(admin, newAdmin);
+            System.out.println("Admin created!");
+        }
+        else {
+            System.err.println("Such login exists!");
+        }
     }
 
     /* Remove user */
