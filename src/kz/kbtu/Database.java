@@ -47,8 +47,10 @@ public class Database {
 
 //        this.users.clear();;
 
-//        Admin admin = Admin.createAdmin("admin", "", "");
-//        users.add(admin);
+        if (getUser("admin") == null) {
+            Admin admin = Admin.createAdmin("admin", "Tik", "Tok");
+            users.add(admin);
+        }
     }
 
     public void load() {

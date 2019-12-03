@@ -1,5 +1,6 @@
 package kz.kbtu;
 
+import kz.kbtu.auth.base.Employee;
 import kz.kbtu.auth.base.User;
 import kz.kbtu.auth.main.*;
 import kz.kbtu.auth.type.Degree;
@@ -7,6 +8,7 @@ import kz.kbtu.auth.type.Faculty;
 import kz.kbtu.auth.type.TeacherPosition;
 import kz.kbtu.communication.message.Message;
 import kz.kbtu.communication.message.Messaging;
+import kz.kbtu.communication.news.ManagingNews;
 import kz.kbtu.communication.news.News;
 import kz.kbtu.communication.order.Order;
 import kz.kbtu.communication.order.OrderStatus;
@@ -18,6 +20,7 @@ import kz.kbtu.study.course.CourseStatus;
 import kz.kbtu.study.course.MarkMode;
 import kz.kbtu.study.throwable.NotCurrentCourse;
 import kz.kbtu.util.Logger;
+import kz.kbtu.util.Printer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +31,7 @@ public class Intranet {
 
     private final Database DATABASE;
     private final Logger LOGGER;
+    private final Printer PRINTER;
     private final Scanner SCANNER;
 
     private final String BACK = "q";
@@ -35,24 +39,24 @@ public class Intranet {
     {
         DATABASE = Database.getInstance();
         LOGGER = Logger.getInstance();
+        PRINTER = Printer.getInstance();
         SCANNER = new Scanner(System.in);
     }
 
     public void begin() {
-        DATABASE.save();
-        System.out.println(DATABASE.getUsers());
-        System.out.println("Welcome to Intranet system!");
+//        System.out.println(DATABASE.getUsers());
+        printInfo("Welcome to Intranet system!");
 
         int i = 0;
 
         while (i < 3) {
-            System.out.println("Enter login please!");
+            printInfo("Enter login please!");
             String login = SCANNER.nextLine();
 
             if (login.equals(BACK))
                 break;
 
-            System.out.println("Enter password please!");
+            printInfo("Enter password please!");
             String password = SCANNER.nextLine();
 
             i++;
@@ -64,7 +68,7 @@ public class Intranet {
                 break;
             }
             else {
-                System.out.println("Invalid credentials! Try again!");
+                printError("Invalid credentials! Try again!");
             }
         }
 
@@ -72,7 +76,8 @@ public class Intranet {
     }
 
     private void session(User user) {
-        System.out.println("You began session as " + user.getClass().getSimpleName());
+        printResult(String.format("Hello %s [%s]", user.getFullName(), user.getLogin()));
+        printResult("You entered as " + user.getClass().getSimpleName());
 
         if (user instanceof Admin) {
             innerSession((Admin) user);
@@ -101,10 +106,8 @@ public class Intranet {
         String answer = "";
 
         while (!answer.equals(BACK)) {
-            System.out.println("1. Add user");
-            System.out.println("2. Remove user");
-            System.out.println("3. Show users");
-            System.out.println("4. Change password");
+            String[] options = new String[] { "Add user", "Remove user", "Show users", "Change password" };
+            printOptions(options);
 
             answer = SCANNER.nextLine();
 
@@ -127,17 +130,14 @@ public class Intranet {
 
     /* Add user */
     private void addUser(Admin admin) {
-        String answer = "";
+        while (true) {
+            String[] options = new String[] { "Students", "Managers", "ORManagers", "Teachers", "Executors", "Admins" };
+            printOptions(options);
 
-        while (!answer.equals(BACK)) {
-            System.out.println("1. Students");
-            System.out.println("2. Manager");
-            System.out.println("3. ORManagers");
-            System.out.println("4. Teachers");
-            System.out.println("5. Executors");
-            System.out.println("6. Admins");
+            String answer = SCANNER.nextLine();
 
-            answer = SCANNER.nextLine();
+            if (answer.equals(BACK))
+                return;
 
             switch (answer) {
                 case "1":
@@ -159,182 +159,181 @@ public class Intranet {
                     addAdmin(admin);
                     break;
             }
-        }
 
-        DATABASE.save();
+            DATABASE.save();
+        }
     }
 
     private void addStudent(Admin admin) {
-        System.out.println("Type login of user!");
+        printInfo("Type login of student!");
         String login = SCANNER.nextLine();
 
-        System.out.println("Type first name of user!");
+        printInfo("Type first name of student!");
         String firstName = SCANNER.nextLine();
 
-        System.out.println("Type last name of user!");
+        printInfo("Type last name of student!");
         String lastName = SCANNER.nextLine();
 
-        System.out.println("Choose faculty of student!");
-        Faculty[] faculties = DATABASE.getFaculties();
-        for (int i = 0; i < faculties.length; ++i) {
-            System.out.println(i+1 + ". " + faculties[i]);
-        }
+        printInfo("Choose faculty of student!");
+        Faculty[] faculties = DATABASE.getFaculties();;
+        printFaculties(faculties);
         int index = SCANNER.nextInt();
         Faculty faculty = faculties[index-1];
 
-        System.out.println("Choose degree of student!");
+        printInfo("Choose degree of student!");
         Degree[] degrees = DATABASE.getDegrees();
-        for (int i = 0; i < degrees.length; ++i) {
-            System.out.println(i+1 + ". " + degrees[i]);
-        }
+        printDegrees(degrees);
         index = SCANNER.nextInt();
         Degree degree = degrees[index-1];
+
+        SCANNER.nextLine();
 
         if (DATABASE.isValidLogin(login)) {
             Student student = admin.createStudent(faculty, degree, login, firstName, lastName);
             DATABASE.addUser(student);
 
             LOGGER.createUser(admin, student);
-            System.out.println("Student created!");
+            printResult("Student created!");
         }
         else {
-            System.err.println("Such login exists!");
+            printError("Such login exists!");
         }
-
     }
 
     private void addManager(Admin admin) {
-        System.out.println("Type login of user!");
+        printInfo("Type login of manager!");
         String login = SCANNER.nextLine();
 
-        System.out.println("Type first name of user!");
+        printInfo("Type first name of manager!");
         String firstName = SCANNER.nextLine();
 
-        System.out.println("Type last name of user!");
+        printInfo("Type last name of manager!");
         String lastName = SCANNER.nextLine();
 
-        System.out.println("Choose faculty of manager!");
+        printInfo("Choose faculty of manager!");
         Faculty[] faculties = DATABASE.getFaculties();
-        for (int i = 0; i < faculties.length; ++i) {
-            System.out.println(i+1 + ". " + faculties[i]);
-        }
+        printFaculties(faculties);
         int index = SCANNER.nextInt();
         Faculty faculty = faculties[index-1];
 
-        System.out.println("Type salary of employee!");
+        printInfo("Type salary of manager!");
         int salary = SCANNER.nextInt();
+
+        SCANNER.nextLine();
 
         if (DATABASE.isValidLogin(login)) {
             Manager manager = admin.createManager(faculty, salary, login, firstName, lastName);
             DATABASE.addUser(manager);
 
             LOGGER.createUser(admin, manager);
-            System.out.println("Manager created!");
+            printResult("Manager created!");
         }
         else {
-            System.err.println("Such login exists!");
+            printError("Such login exists!");
         }
     }
 
     private void addORManager(Admin admin) {
-        System.out.println("Type login of user!");
+        printInfo("Type login of OR manager!");
         String login = SCANNER.nextLine();
 
-        System.out.println("Type first name of user!");
+        printInfo("Type first name of OR manager!");
         String firstName = SCANNER.nextLine();
 
-        System.out.println("Type last name of user!");
+        printInfo("Type last name of OR manager!");
         String lastName = SCANNER.nextLine();
 
-        System.out.println("Type salary of employee!");
+        printInfo("Type salary of OR manager!");
         int salary = SCANNER.nextInt();
+
+        SCANNER.nextLine();
 
         if (DATABASE.isValidLogin(login)) {
             ORManager manager = admin.createOrManager(salary, login, firstName, lastName);
             DATABASE.addUser(manager);
 
             LOGGER.createUser(admin, manager);
-            System.out.println("ORManager created!");
+            printResult("OR Manager created!");
         }
         else {
-            System.err.println("Such login exists!");
+            printError("Such login exists!");
         }
     }
 
     private void addTeacher(Admin admin) {
-        System.out.println("Type login of user!");
+        printInfo("Type login of teacher!");
         String login = SCANNER.nextLine();
 
-        System.out.println("Type first name of user!");
+        printInfo("Type first name of teacher!");
         String firstName = SCANNER.nextLine();
 
-        System.out.println("Type last name of user!");
+        printInfo("Type last name of teacher!");
         String lastName = SCANNER.nextLine();
 
-        System.out.println("Choose faculty of teacher!");
+        printInfo("Choose faculty of teacher!");
         Faculty[] faculties = DATABASE.getFaculties();
-        for (int i = 0; i < faculties.length; ++i) {
-            System.out.println(i+1 + ". " + faculties[i]);
-        }
+        printFaculties(faculties);
         int index = SCANNER.nextInt();
         Faculty faculty = faculties[index-1];
 
-        System.out.println("Choose faculty of teacher!");
+        printInfo("Choose position of teacher!");
         TeacherPosition[] positions = DATABASE.getPositions();
-        for (int i = 0; i < positions.length; ++i) {
-            System.out.println(i+1 + ". " + positions[i]);
-        }
+        printPositions(positions);
         index = SCANNER.nextInt();
         TeacherPosition position = positions[index-1];
 
-        System.out.println("Type salary of employee!");
+        printInfo("Type salary of teacher!");
         int salary = SCANNER.nextInt();
+
+        SCANNER.nextLine();
 
         if (DATABASE.isValidLogin(login)) {
             Teacher teacher = admin.createTeacher(faculty, position, salary, login, firstName, lastName);
             DATABASE.addUser(teacher);
 
             LOGGER.createUser(admin, teacher);
-            System.out.println("Teacher created!");
+            printResult("Teacher created!");
         }
         else {
-            System.err.println("Such login exists!");
+            printError("Such login exists!");
         }
     }
 
     private void addExecutor(Admin admin) {
-        System.out.println("Type login of user!");
+        printInfo("Type login of executor!");
         String login = SCANNER.nextLine();
 
-        System.out.println("Type first name of user!");
+        printInfo("Type first name of executor!");
         String firstName = SCANNER.nextLine();
 
-        System.out.println("Type last name of user!");
+        printInfo("Type last name of executor!");
         String lastName = SCANNER.nextLine();
 
-        System.out.println("Type salary of employee!");
+        printInfo("Type salary of executor!");
         int salary = SCANNER.nextInt();
+
+        SCANNER.nextLine();
 
         if (DATABASE.isValidLogin(login)) {
             Executor executor = admin.createExecutor(salary, login, firstName, lastName);
             DATABASE.addUser(executor);
 
             LOGGER.createUser(admin, executor);
-            System.out.println("Executor created!");
+            printResult("Executor created!");
         }
         else {
-            System.err.println("Such login exists!");
+            printError("Such login exists!");
         }
     }
 
     private void addAdmin(Admin admin) {
-        System.out.println("Type login of user!");
+        printInfo("Type login of admin!");
         String login = SCANNER.nextLine();
 
-        System.out.println("Type first name of user!");
+        printInfo("Type first name of admin!");
         String firstName = SCANNER.nextLine();
 
-        System.out.println("Type last name of user!");
+        printInfo("Type last name of admin!");
         String lastName = SCANNER.nextLine();
 
         if (DATABASE.isValidLogin(login)) {
@@ -342,10 +341,10 @@ public class Intranet {
             DATABASE.addUser(newAdmin);
 
             LOGGER.createUser(admin, newAdmin);
-            System.out.println("Admin created!");
+            printResult("Admin created!");
         }
         else {
-            System.err.println("Such login exists!");
+            printError("Such login exists!");
         }
     }
 
@@ -354,18 +353,18 @@ public class Intranet {
         String answer = "";
 
         while (!answer.equals(BACK)) {
-            System.out.println("Write login of user to remove!");
+            printInfo("Write login of user to remove!");
 
             answer = SCANNER.nextLine();
 
             User result = DATABASE.removeUser(answer);
 
             if (result != null) {
-                System.out.println("User removed!");
                 LOGGER.removeUser(admin, result);
+                printResult("User removed!");
             }
             else {
-                System.out.println("Cannot find such user!");
+                printError("Login not found!");
             }
         }
 
@@ -374,18 +373,12 @@ public class Intranet {
 
     /* Show users */
     private void showUsers() {
-        String answer;
-
         while (true) {
-            System.out.println("Choose users!");
-            System.out.println("1. Students");
-            System.out.println("2. Manager");
-            System.out.println("3. ORManagers");
-            System.out.println("4. Teachers");
-            System.out.println("5. Executors");
-            System.out.println("6. Admins");
+            printInfo("Choose users!");
+            String[] options = new String[] { "Students", "Managers", "ORManagers", "Teachers", "Executors", "Admins" };
+            printOptions(options);
 
-            answer = SCANNER.nextLine();
+            String answer = SCANNER.nextLine();
 
             List<User> users = new ArrayList<>();
 
@@ -409,15 +402,20 @@ public class Intranet {
                     users = DATABASE.getUsers(Admin.class);
                     break;
                 default:
-                    System.out.println("Invalid option!");
+                    printError("Invalid option!");
                     break;
             }
 
-            for (int i = 0; i < users.size(); ++i) {
-                System.out.println(i+1 + ": " + users.get(i));
+            if (users.size() == 0) {
+                printResult("Empty!");
+                return;
             }
 
-            System.out.println("Choose user!");
+            for (int i = 0; i < users.size(); ++i) {
+                System.out.println(i+1 + ": " + users.get(i).getFullName() + "[" + users.get(i).getLogin() + "]");
+            }
+
+            printInfo("Choose user!");
 
             answer = SCANNER.nextLine();
 
@@ -431,13 +429,13 @@ public class Intranet {
     }
 
     private void showUser(User user) {
-        System.out.println(user);
+        System.out.println(String.format("Full name: %s [%s]", user.getFullName(), user.getLogin()));
+        System.out.println(String.format("Birth date: %s", user.getBirthDate()));
+        System.out.println(String.format("Gender: %s", user.getGender()));
+        System.out.println(String.format("Phone number: %s", user.getPhoneNumber()));
+        System.out.println(String.format("Email: %s", user.getEmail()));
 
-        String answer = "";
-
-        while (!answer.equals(BACK)) {
-            answer = SCANNER.nextLine();
-        }
+        await();
     }
 
     /* -------------------------------------------------- ORManager ------------------------------------------------- */
@@ -445,15 +443,9 @@ public class Intranet {
         String answer = "";
 
         while (!answer.equals(BACK)) {
-            System.out.println("1. Add course");
-            System.out.println("2. Remove course");
-            System.out.println("3. Show course");
-            System.out.println("4. Offer course");
-            System.out.println("5. Write order");
-            System.out.println("6. Show messages");
-            System.out.println("7. Write message");
-            System.out.println("8. News");
-            System.out.println("9. Change password");
+            String[] options = new String[] { "Add course", "Remove course", "Show course", "Offer course",
+                    "Write order", "Show messages", "Write message", "News", "Change password" };
+            printOptions(options);
 
             answer = SCANNER.nextLine();
 
@@ -491,14 +483,16 @@ public class Intranet {
 
     /* Add course */
     private void addCourse(ORManager manager) {
-        System.out.println("Type name of course!");
+        printInfo("Type name of course!");
         String name = SCANNER.nextLine();
 
-        System.out.println("Type login of teacher of course!");
+        printInfo("Type login of teacher of course!");
         String login = SCANNER.nextLine();
 
-        System.out.println("Type credit number of course!");
+        printInfo("Type credit number of course!");
         int creditNumber = SCANNER.nextInt();
+
+        SCANNER.nextLine();
 
         User user = DATABASE.getUser(login);
 
@@ -509,12 +503,12 @@ public class Intranet {
             DATABASE.addCourse(course);
 
             LOGGER.createCourse(manager, course);
-            System.out.println("Course created!");
+            printResult("Course created!");
 
             DATABASE.save();
         }
         else {
-            System.err.println("Cannot create Course!");
+            printError("Login not found or not teacher's!");
         }
     }
 
@@ -523,20 +517,20 @@ public class Intranet {
         String answer = "";
 
         while (!answer.equals(BACK)) {
-            System.out.println("Write name of course to remove!");
+            printInfo("Write name of course to remove!");
 
             answer = SCANNER.nextLine();
 
             Course result = DATABASE.removeCourse(answer);
 
             if (result != null) {
-                System.out.println("Course removed!");
+                printResult("Course removed!");
                 LOGGER.removeCourse(manager, result);
 
                 DATABASE.save();
             }
             else {
-                System.out.println("Cannot find such course!");
+                printError("Course not found!");
             }
         }
 
@@ -545,42 +539,52 @@ public class Intranet {
 
     /* Show courses */
     private void showCourses() {
-        List<Course> courses = DATABASE.getCourses();
+        while (true) {
+            List<Course> courses = DATABASE.getCourses();
 
-        String answer = "";
-
-        while (!answer.equals(BACK)) {
-            for (int i = 0; i < courses.size(); ++i) {
-                System.out.println(i+1 + ". " + courses.get(i));
+            if (courses.size() == 0) {
+                printResult("Empty!");
+                return;
             }
 
-            answer = SCANNER.nextLine();
+            for (int i = 0; i < courses.size(); ++i) {
+                System.out.println(i+1 + ". " + courses.get(i).getName());
+            }
+
+            printInfo("Choose course!");
+
+            String answer = SCANNER.nextLine();
+
+            if (answer.equals(BACK))
+                break;
+
+            int index = Integer.parseInt(answer);
+
+            showCourseInfo(courses.get(index-1));
         }
     }
 
     /* Offer course */
     private void offerCourse(ORManager manager) {
-        System.out.println("Type name of course!");
+        printInfo("Type name of course!");
         String name = SCANNER.nextLine();
 
-        System.out.println("Choose faculty!");
+        printInfo("Choose faculty!");
         Faculty[] faculties = DATABASE.getFaculties();
-        for (int i = 0; i < faculties.length; ++i) {
-            System.out.println(i+1 + ". " + faculties[i]);
-        }
+        printFaculties(faculties);
         int index = SCANNER.nextInt();
         Faculty faculty = faculties[index-1];
 
-        System.out.println("Choose degree!");
+        printInfo("Choose degree!");
         Degree[] degrees = DATABASE.getDegrees();
-        for (int i = 0; i < degrees.length; ++i) {
-            System.out.println(i+1 + ". " + degrees[i]);
-        }
+        printDegrees(degrees);
         index = SCANNER.nextInt();
         Degree degree = degrees[index-1];
 
-        System.out.println("Type year of study!");
+        printInfo("Type year of study!");
         int yearOfStudy = SCANNER.nextInt();
+
+        SCANNER.nextLine();
 
         Course course = DATABASE.getCourse(name);
         List<Student> students = DATABASE.getStudents(yearOfStudy, faculty, degree);
@@ -589,10 +593,13 @@ public class Intranet {
             manager.offerCourse(course, students);
 
             LOGGER.offerCourse(manager, course, yearOfStudy, faculty, degree);
-            System.out.println("Course offered!");
-
-            DATABASE.save();
+            printResult("Course offered!");
         }
+        else {
+            printError("Course not found!");
+        }
+
+        DATABASE.save();
     }
 
     /* --------------------------------------------------- Student -------------------------------------------------- */
@@ -600,11 +607,8 @@ public class Intranet {
         String answer = "";
 
         while (!answer.equals(BACK)) {
-            System.out.println("1. Show courses");
-            System.out.println("2. Registration");
-            System.out.println("3. Transcript");
-            System.out.println("4. News");
-            System.out.println("5. Change password");
+            String[] options = new String[] { "Show courses", "Registration", "Transcript", "News", "Change password" };
+            printOptions(options);
 
             answer = SCANNER.nextLine();
 
@@ -630,20 +634,25 @@ public class Intranet {
 
     /* Show courses */
     private void showCourses(Student student) {
-        List<Course> courses = new ArrayList<>();
-
-        for (Course course: student.getCourses()) {
-            if (course.getStatuses().get(student.getLogin()) == CourseStatus.CURRENT) {
-                courses.add(course);
-            }
-        }
-
         while (true) {
+            List<Course> courses = new ArrayList<>();
+
+            for (Course course: student.getCourses()) {
+                if (course.getStatuses().get(student.getLogin()) == CourseStatus.CURRENT) {
+                    courses.add(course);
+                }
+            }
+
+            if (courses.size() == 0) {
+                printResult("Empty!");
+                return;
+            }
+
             for (int i = 0; i < courses.size(); ++i) {
                 System.out.println(i+1 + ". " + courses.get(i));
             }
 
-            System.out.println("Choose course!");
+            printInfo("Choose course!");
 
             String answer = SCANNER.nextLine();
 
@@ -660,10 +669,9 @@ public class Intranet {
         String answer = "";
 
         while (!answer.equals(BACK)) {
-            System.out.println("1. Show course info");
-            System.out.println("2. Show course files");
-            System.out.println("3. Show teacher info");
-            System.out.println("4. Show marks");
+            String[] options = new String[] { "Show course info", "Show course files", "Show teacher info",
+                    "Show marks" };
+            printOptions(options);
 
             answer = SCANNER.nextLine();
 
@@ -675,7 +683,7 @@ public class Intranet {
                     showFiles(course);
                     break;
                 case "3":
-                    showTeacherInfo(course);
+                    showTeacherInfo(course.getTeacher());
                     break;
                 case "4":
                     showMarks(student, course);
@@ -703,11 +711,16 @@ public class Intranet {
                 }
             }
 
+            if (courses.size() == 0) {
+                printResult("Empty!");
+                return;
+            }
+
             for (int i = 0; i < courses.size(); ++i) {
                 System.out.println(i+1 + ". " + courses.get(i));
             }
 
-            System.out.println("Choose course to register!");
+            printInfo("Choose course to register!");
 
             String answer = SCANNER.nextLine();
 
@@ -723,14 +736,19 @@ public class Intranet {
     private void registerCourse(Student student, Course course) {
         course.updateStatus(student.getLogin(), CourseStatus.CURRENT);
         course.openMarks(student.getLogin());
+        printResult("Course registered!");
 
         DATABASE.save();
-        System.out.println("Course registered!");
     }
 
     /* Show transcript */
     private void showTranscript(Student student) {
         List<Course> courses = student.getCourses();
+
+        if (courses.size() == 0) {
+            printResult("Empty!");
+            return;
+        }
 
         for (Course course: courses) {
             if (course.getStatus(student.getLogin()) != CourseStatus.FUTURE) {
@@ -746,13 +764,9 @@ public class Intranet {
         String answer = "";
 
         while (!answer.equals(BACK)) {
-            System.out.println("1. Show courses");
-            System.out.println("2. Add news");
-            System.out.println("3. Write order");
-            System.out.println("4. Show messages");
-            System.out.println("5. Write message");
-            System.out.println("6. News");
-            System.out.println("7. Change password");
+            String[] options = new String[] { "Show courses", "Add news", "Write order", "Show messages",
+                    "Write message", "News", "Change password" };
+            printOptions(options);
 
             answer = SCANNER.nextLine();
 
@@ -791,7 +805,12 @@ public class Intranet {
                 System.out.println(i+1 + ". " + courses.get(i));
             }
 
-            System.out.println("Choose course!");
+            if (courses.size() == 0) {
+                printResult("Empty!");
+                return;
+            }
+
+            printInfo("Choose course!");
 
             String answer = SCANNER.nextLine();
 
@@ -808,12 +827,9 @@ public class Intranet {
         String answer = "";
 
         while (!answer.equals(BACK)) {
-            System.out.println("1. Show course info");
-            System.out.println("2. Show course files");
-            System.out.println("3. Show teacher info");
-            System.out.println("4. Show students");
-            System.out.println("5. Upload file");
-            System.out.println("6. Put marks");
+            String[] options = new String[] { "Show course info", "Show course files", "Show teacher info", "Show students",
+                    "Upload file", "Put marks" };
+            printOptions(options);
 
             answer = SCANNER.nextLine();
 
@@ -825,7 +841,7 @@ public class Intranet {
                     showFiles(course);
                     break;
                 case "3":
-                    showTeacherInfo(course);
+                    showTeacherInfo(course.getTeacher());
                     break;
                 case "4":
                     showStudents(course);
@@ -842,16 +858,16 @@ public class Intranet {
 
     /* Upload file */
     private void uploadFile(Teacher teacher, Course course) {
-        System.out.println("Type title of file!");
+        printInfo("Type title of file!");
         String title = SCANNER.nextLine();
 
-        System.out.println("Type text of file!");
+        printInfo("Type text of file!");
         String text = SCANNER.nextLine();
 
         File file = teacher.createFile(title, text);
 
         course.uploadFile(file);
-        System.out.println("File uploaded!");
+        printResult("File uploaded!");
         LOGGER.uploadFile(teacher, course, file);
 
         DATABASE.save();
@@ -859,45 +875,29 @@ public class Intranet {
 
     /* Put marks */
     private void putMarks(Teacher teacher, Course course) {
-        System.out.println("Type login of student!");
+        printInfo("Type login of student!");
         String login = SCANNER.nextLine();
 
-        System.out.println("Choose mode of mark!");
+        printInfo("Choose mode of mark!");
         MarkMode[] modes = DATABASE.getMarkModes();
-        for (int i = 0; i < modes.length; ++i) {
-            System.out.println(i+1 + ". " + modes[i]);
-        }
+        printModes(modes);
         int index = SCANNER.nextInt();
         MarkMode mode = modes[index-1];
 
-        System.out.println("Type score to add for student!");
+        printInfo("Type score to add for student!");
         double delta = SCANNER.nextDouble();
+
+        SCANNER.nextLine();
 
         try {
             teacher.putMark(login, course, mode, delta);
-            System.out.println("Mark put!");
+            printResult("Mark put!");
 
             DATABASE.save();
         }
-        catch (NotCurrentCourse notCurrentCourse) {
-            System.err.println(notCurrentCourse.getMessage());
+        catch (NotCurrentCourse e) {
+            printError(e.getMessage());
         }
-
-    }
-
-    /* Write news */
-    private void writeNews(Teacher teacher) {
-        System.out.println("Type title of news!");
-        String title = SCANNER.nextLine();
-
-        System.out.println("Type text of news!");
-        String text = SCANNER.nextLine();
-
-        News news = teacher.createNews(title, text);
-        DATABASE.addNews(news);
-        System.out.println("News created!");
-        LOGGER.writeNews(teacher, news);
-        DATABASE.save();
     }
 
     /* --------------------------------------------------- Manager -------------------------------------------------- */
@@ -905,12 +905,9 @@ public class Intranet {
         String answer = "";
 
         while (!answer.equals(BACK)) {
-            System.out.println("1. Add news");
-            System.out.println("2. Write order");
-            System.out.println("3. Show messages");
-            System.out.println("4. Write message");
-            System.out.println("5. News");
-            System.out.println("6. Change password");
+            String[] options = new String[] { "Add news", "Write order", "Show messages", "Write message",
+                    "News", "Change password" };
+            printOptions(options);
 
             answer = SCANNER.nextLine();
 
@@ -937,34 +934,14 @@ public class Intranet {
         }
     }
 
-    /* Write news */
-    private void writeNews(Manager manager) {
-        System.out.println("Type title of news!");
-        String title = SCANNER.nextLine();
-
-        System.out.println("Type text of news!");
-        String text = SCANNER.nextLine();
-
-        News news = manager.createNews(title, text);
-        DATABASE.addNews(news);
-        System.out.println("News created!");
-        LOGGER.writeNews(manager, news);
-        DATABASE.save();
-    }
-
     /* -------------------------------------------------- Executor -------------------------------------------------- */
     private void innerSession(Executor executor) {
         String answer = "";
 
         while (!answer.equals(BACK)) {
-            System.out.println("1. Show new orders");
-            System.out.println("2. Show accepted orders");
-            System.out.println("3. Show rejected orders");
-            System.out.println("4. Show finished orders");
-            System.out.println("5. Show messages");
-            System.out.println("6. Write message");
-            System.out.println("7. News");
-            System.out.println("8. Change password");
+            String[] options = new String[] { "New orders", "Accepted orders", "Rejected orders", "Finished orders",
+                    "Show messages", "Write messages", "News", "Change password" };
+            printOptions(options);
 
             answer = SCANNER.nextLine();
 
@@ -1003,7 +980,7 @@ public class Intranet {
             List<Order> orders = executor.getOrders(status);
 
             if (orders.size() == 0) {
-                System.out.println("Empty!");
+                printResult("Empty!");
                 return;
             }
 
@@ -1011,7 +988,7 @@ public class Intranet {
                 System.out.println(i+1 + ". " + orders.get(i));
             }
 
-            System.out.println("Choose order!");
+            printInfo("Choose order!");
 
             String answer = SCANNER.nextLine();
 
@@ -1027,64 +1004,71 @@ public class Intranet {
     private void showOrder(Executor executor, Order order) {
         String answer;
 
-        System.out.println(order);
+        Employee sender = order.getSender();
+
+        System.out.println(String.format("Order: %s [%s]", order.getTitle(), order.getStatus()));
+        System.out.println(String.format("Text: %s", order.getText()));;
+        System.out.println(String.format("Sender: %s [%s]", sender.getFullName(), sender.getLogin()));;
+        System.out.println(String.format("Date: %s", order.getTimestamp()));
 
         if (order.getStatus() == OrderStatus.NEW) {
-            System.out.println("This is new order! Do you accept or reject?");
-            System.out.println("1. Accept order");
-            System.out.println("2. Reject order");
+            printInfo("This is new order! Do you accept or reject?");
+            String[] options = new String[] { "Accept order", "Reject order" };
+            printOptions(options);
 
             answer = SCANNER.nextLine();
 
             switch (answer) {
                 case "1":
                     executor.changeOrderStatus(order, OrderStatus.PENDING);
-                    System.out.println("Order accepted! (now pending)");
+                    printResult("Order accepted! (now pending)");
                     break;
                 case "2":
                     executor.changeOrderStatus(order, OrderStatus.REJECTED);
-                    System.out.println("Order rejected!");
+                    printResult("Order rejected!");
                     break;
             }
         }
         else if (order.getStatus() == OrderStatus.PENDING) {
-            System.out.println("This is pending order! Do you finished it?");
-            System.out.println("1. Finish order");
-            System.out.println("2. Reject order");
+            printInfo("This is pending order! Do you finished it?");
+            String[] options = new String[] { "Finish order", "Reject order" };
+            printOptions(options);
 
             answer = SCANNER.nextLine();
 
             switch (answer) {
                 case "1":
                     executor.changeOrderStatus(order, OrderStatus.FINISHED);
-                    System.out.println("Order finished!");
+                    printResult("Order finished!");
                     break;
                 case "2":
                     executor.changeOrderStatus(order, OrderStatus.REJECTED);
-                    System.out.println("Order rejected!");
+                    printResult("Order rejected!");
                     break;
             }
         }
         else if (order.getStatus() == OrderStatus.REJECTED) {
-            System.out.println("This is rejected order! Do you accept it?");
-            System.out.println("1. Accept order");
+            printInfo("This is rejected order! Do you accept it?");
+            String[] options = new String[] { "Accept order"};
+            printOptions(options);
 
             answer = SCANNER.nextLine();
 
             if ("1".equals(answer)) {
                 executor.changeOrderStatus(order, OrderStatus.PENDING);
-                System.out.println("Order accepted! (now pending)");
+                printResult("Order accepted! (now pending)");
             }
         }
         else {
-            System.out.println("This is finished order! Do you undone it?");
-            System.out.println("1. Undone order");
+            printInfo("This is finished order! Do you undone it?");
+            String[] options = new String[] { "Undone order"};
+            printOptions(options);
 
             answer = SCANNER.nextLine();
 
             if ("1".equals(answer)) {
                 executor.changeOrderStatus(order, OrderStatus.PENDING);
-                System.out.println("Order accepted! (now pending)");
+                printResult("Order accepted! (now pending)");
             }
         }
 
@@ -1095,7 +1079,13 @@ public class Intranet {
 
     /* Show course info */
     private void showCourseInfo(Course course) {
-        System.out.println(course);
+        Teacher teacher = course.getTeacher();
+
+        System.out.println(String.format("Course name: %s", course.getName()));
+        System.out.println(String.format("Credit number: %d", course.getCreditNumber()));
+        System.out.println(String.format("Teacher: %s [%s]", teacher.getFullName(), teacher.getLogin()));
+
+        await();
     }
 
     /* Show files */
@@ -1107,7 +1097,12 @@ public class Intranet {
                 System.out.println(i+1 + ". " + files.get(i).getTitle());
             }
 
-            System.out.println("Choose file!");
+            if (files.size() == 0) {
+                printResult("Empty!");
+                return;
+            }
+
+            printInfo("Choose file!");
 
             String answer = SCANNER.nextLine();
 
@@ -1121,17 +1116,36 @@ public class Intranet {
     }
 
     private void showFile(File file) {
-        System.out.println(file);
+        System.out.println(String.format("Title: %s", file.getTitle()));
+        System.out.println(String.format("Text: %s", file.getText()));
+        System.out.println(String.format("Created by %s", file.getCreator()));
+
+        await();
     }
 
     /* Show teacher info */
-    private void showTeacherInfo(Course course) {
-        System.out.println(course.getTeacher());
+    private void showTeacherInfo(Teacher teacher) {
+        System.out.println(String.format("Full name: %s [%s]", teacher.getFullName(), teacher.getLogin()));
+        System.out.println(String.format("Birth date: %s", teacher.getBirthDate()));
+        System.out.println(String.format("Gender: %s", teacher.getGender()));
+        System.out.println(String.format("Phone number: %s", teacher.getPhoneNumber()));
+        System.out.println(String.format("Email: %s", teacher.getEmail()));
+        System.out.println(String.format("Faculty: %s", teacher.getFaculty()));
+        System.out.println(String.format("Position: %s", teacher.getPosition()));
+
+        await();
     }
 
     /* Show students */
     private void showStudents(Course course) {
-        for (Student student: course.getStudents()) {
+        List<Student> students = course.getStudents();
+
+        if (students.size() == 0) {
+            printResult("Empty!");
+            return;
+        }
+
+        for (Student student: students) {
             if (course.getStatus(student.getLogin()) == CourseStatus.CURRENT) {
                 Marks marks = course.getMarks(student.getLogin());
 
@@ -1148,15 +1162,15 @@ public class Intranet {
             List<Message> messages = messaging.getMessages();
 
             if (messages.size() == 0) {
-                System.out.println("Empty!");
+                printResult("Empty!");
                 return;
             }
 
             for (int i = 0; i < messages.size(); ++i) {
-                System.out.println(i+1 + ". " + messages.get(i));
+                System.out.println(i+1 + ". " + messages.get(i).getTitle());
             }
 
-            System.out.println("Choose message!");
+            printInfo("Choose message!");
 
             String answer = SCANNER.nextLine();
 
@@ -1170,24 +1184,25 @@ public class Intranet {
     }
 
     private void showMessage(Message message) {
-        System.out.println(message);
+        Employee sender = message.getSender();
 
-        String answer = "";
+        System.out.println(String.format("Title: %s", message.getTitle()));
+        System.out.println(String.format("Text: %s", message.getText()));
+        System.out.println(String.format("Sender: %s [%s]", sender.getFullName(), sender.getLogin()));
+        System.out.println(String.format("Date: %s", message.getTimestamp()));
 
-        while (!answer.equals(BACK)) {
-            answer = SCANNER.nextLine();
-        }
+        await();
     }
 
     /* Write message */
     private void writeMessage(Messaging messaging) {
-        System.out.println("Type title of message!");
+        printInfo("Type title of message!");
         String title = SCANNER.nextLine();
 
-        System.out.println("Type text of message!");
+        printInfo("Type text of message!");
         String text = SCANNER.nextLine();
 
-        System.out.println("Type login of target!");
+        printInfo("Type login of target!");
         String login = SCANNER.nextLine();
 
         User user = DATABASE.getUser(login);
@@ -1195,24 +1210,30 @@ public class Intranet {
         if (user instanceof Messaging) {
             Messaging target = (Messaging) user;
             messaging.sendMessage(title, text, target);
-            System.out.println("Message sent!");
+            printResult("Message sent!");
+
             DATABASE.save();
         }
         else {
-            System.err.println("Cannot send Message!");
+            printError("Login is not found or not have messages");
         }
     }
 
     /* Show newses */
     private void showNewses() {
-        List<News> newses = DATABASE.getNews();
-
         while (true) {
-            for (int i = 0; i < newses.size(); ++i) {
-                System.out.println(i+1 + ": " + newses.get(i));
+            List<News> newses = DATABASE.getNews();
+
+            if (newses.size() == 0) {
+                printResult("Empty!");
+                return;
             }
 
-            System.out.println("Choose news!");
+            for (int i = 0; i < newses.size(); ++i) {
+                System.out.println(i+1 + ": " + newses.get(i).getTitle());
+            }
+
+            printInfo("Choose news!");
 
             String answer = SCANNER.nextLine();
 
@@ -1226,45 +1247,63 @@ public class Intranet {
     }
 
     private void showNews(News news) {
-        System.out.println(news);
+        Employee sender = news.getSender();
 
-        String answer = "";
+        System.out.println(String.format("Title: %s [%s]", news.getTitle(), news.getFaculty()));
+        System.out.println(String.format("Text: %s", news.getText()));
+        System.out.println(String.format("Sender: %s [%s]", sender.getFullName(), sender.getLogin()));
+        System.out.println(String.format("Date: %s", news.getTimestamp()));
 
-        while (!answer.equals(BACK)) {
-            answer = SCANNER.nextLine();
-        }
+        await();
+    }
+
+    /* Write news */
+    private void writeNews(ManagingNews sender) {
+        printInfo("Type title of news!");
+        String title = SCANNER.nextLine();
+
+        printInfo("Type text of news!");
+        String text = SCANNER.nextLine();
+
+        News news = sender.createNews(title, text);
+        DATABASE.addNews(news);
+        DATABASE.save();
+
+        printResult("News created!");
+        LOGGER.writeNews(sender, news);
     }
 
     /* Change password */
     private void changePassword(User user) {
-        System.out.println("Type current password!");
+        printInfo("Type current password!");
         String currentPassword = SCANNER.nextLine();
 
-        System.out.println("Type new password!");
+        printInfo("Type new password!");
         String newPassword = SCANNER.nextLine();
 
-        System.out.println("Type new password again!");
+        printInfo("Type new password again!");
         String newPassword2 = SCANNER.nextLine();
 
         if (user.checkCredentials(user.getLogin(), currentPassword) && newPassword.equals(newPassword2)) {
             user.setPassword(newPassword);
+            printResult("Password changed!");
 
-            System.out.println("Password changed!");
+            DATABASE.save();
         }
         else {
-            System.err.println("Cannot change password!");
+            printError("Credentials not match!");
         }
     }
 
     /* Send order */
     private void sendOrder(SendingOrders sender) {
-        System.out.println("Type title of order!");
+        printInfo("Type title of order!");
         String title = SCANNER.nextLine();
 
-        System.out.println("Type text of order!");
+        printInfo("Type text of order!");
         String text = SCANNER.nextLine();
 
-        System.out.println("Type login of executor!");
+        printInfo("Type login of executor!");
         String login = SCANNER.nextLine();
 
         User user = DATABASE.getUser(login);
@@ -1272,12 +1311,54 @@ public class Intranet {
         if (user instanceof Executor) {
             Executor executor = (Executor) user;
             Order order = sender.sendOrder(title, text, executor);
-            System.out.println("Order sent!");
-            LOGGER.sendOrder(sender, order, executor);
             DATABASE.save();
+
+            printResult("Order sent!");
+            LOGGER.sendOrder(sender, order, executor);
         }
         else {
-            System.err.println("Cannot create Order!");
+            printError("Login is not found or not have orders");
         }
+
+    }
+
+    private void await() {
+        String answer = "";
+
+        while (!answer.equals(BACK)) {
+            answer = SCANNER.nextLine();
+        }
+    }
+
+    private void printInfo(String info) {
+        PRINTER.printInfo(info);
+    }
+
+    private void printResult(String result) {
+        PRINTER.printResult(result);
+    }
+
+    private void printError(String error) {
+        PRINTER.printError(error);
+    }
+
+    private void printOptions(String[] options) {
+        PRINTER.printOptions(options);
+    }
+
+    private void printFaculties(Faculty[] faculties) {
+        PRINTER.printFaculties(faculties);
+    }
+
+    private void printDegrees(Degree[] degrees) {
+        PRINTER.printDegrees(degrees);
+    }
+
+    private void printPositions(TeacherPosition[] positions) {
+        PRINTER.printPositions(positions);
+    }
+
+    private void printModes(MarkMode[] modes) {
+        PRINTER.printModes(modes);
     }
 }

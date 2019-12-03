@@ -27,7 +27,7 @@ public class Message implements Serializable {
         return text;
     }
 
-    public Messaging getSender() {
+    public Employee getSender() {
         return sender;
     }
 

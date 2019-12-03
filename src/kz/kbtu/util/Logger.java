@@ -4,6 +4,7 @@ import kz.kbtu.auth.base.User;
 import kz.kbtu.auth.main.*;
 import kz.kbtu.auth.type.Degree;
 import kz.kbtu.auth.type.Faculty;
+import kz.kbtu.communication.news.ManagingNews;
 import kz.kbtu.communication.news.News;
 import kz.kbtu.communication.order.Order;
 import kz.kbtu.communication.order.SendingOrders;
@@ -36,8 +37,8 @@ public class Logger {
 
     public void enterAdmin(Admin admin) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(LOG, true))) {
-            writer.write(FORMAT.format(LocalDateTime.now()) + " - Admin " + admin.getLogin() +
-                    " entered to system!\n");
+            writer.write(String.format("%s - Admin %s [%s] entered into system!\n",
+                    FORMAT.format(LocalDateTime.now()), admin.getFullName(), admin.getLogin()));
 
             writer.flush();
         }
@@ -48,8 +49,9 @@ public class Logger {
 
     public void createUser(Admin admin, User user) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(LOG, true))) {
-            writer.write(FORMAT.format(LocalDateTime.now()) + " - Admin " + admin.getLogin() +
-                    " created " + user.getClass().getSimpleName() + " " + user.getLogin() +  "\n");
+            writer.write(String.format("%s - Admin %s [%s] created %s %s [%s]\n",
+                    FORMAT.format(LocalDateTime.now()), admin.getFullName(), admin.getLogin(),
+                    user.getClass().getSimpleName(), user.getFullName(), user.getLogin()));
 
             writer.flush();
         }
@@ -60,8 +62,9 @@ public class Logger {
 
     public void removeUser(Admin admin, User user) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(LOG, true))) {
-            writer.write(FORMAT.format(LocalDateTime.now()) + " - Admin " + admin.getLogin() +
-                    " removed " + user.getClass().getSimpleName() + " " + user.getLogin() +  "\n");
+            writer.write(String.format("%s - Admin %s [%s] removed %s %s [%s]\n",
+                    FORMAT.format(LocalDateTime.now()), admin.getFullName(), admin.getLogin(),
+                    user.getClass().getSimpleName(), user.getFullName(), user.getLogin()));
 
             writer.flush();
         }
@@ -72,8 +75,8 @@ public class Logger {
 
     public void createCourse(ORManager manager, Course course) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(LOG, true))) {
-            writer.write(FORMAT.format(LocalDateTime.now()) + " - ORManager " + manager.getLogin() +
-                    " created Course " + course.getName() +  "\n");
+            writer.write(String.format("%s - ORManager %s [%s] created Course %s\n",
+                    FORMAT.format(LocalDateTime.now()), manager.getFullName(), manager.getLogin(), course.getName()));
 
             writer.flush();
         }
@@ -84,8 +87,8 @@ public class Logger {
 
     public void removeCourse(ORManager manager, Course course) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(LOG, true))) {
-            writer.write(FORMAT.format(LocalDateTime.now()) + " - ORManager " + manager.getLogin() +
-                    " removed Course " + course.getName() +  "\n");
+            writer.write(String.format("%s - ORManager %s [%s] removed Course %s\n",
+                    FORMAT.format(LocalDateTime.now()), manager.getFullName(), manager.getLogin(), course.getName()));
 
             writer.flush();
         }
@@ -96,9 +99,10 @@ public class Logger {
 
     public void offerCourse(ORManager manager, Course course, int yearOfStudy, Faculty faculty, Degree degree) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(LOG, true))) {
-            writer.write(FORMAT.format(LocalDateTime.now()) + " - ORManager " + manager.getLogin() +
-                    " offered Course " + course.getName() + " offered to " + yearOfStudy + " year of study, " +
-                    faculty + " faculty, " + degree + " degree students" + "\n");
+            writer.write(String.format("%s - ORManager %s [%s] offered Course %s to %s year of study, " +
+                            "%s faculty and %s degree students\n",
+                    FORMAT.format(LocalDateTime.now()), manager.getFullName(), manager.getLogin(), course.getName(),
+                    yearOfStudy, faculty, degree));
 
             writer.flush();
         }
@@ -109,8 +113,9 @@ public class Logger {
 
     public void uploadFile(Teacher teacher, Course course, File file) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(LOG, true))) {
-            writer.write(FORMAT.format(LocalDateTime.now()) + " - Teacher " + teacher.getLogin() +
-                    " added File " + file.getTitle() + " to Course " + course.getName() + "\n");
+            writer.write(String.format("%s - Teacher %s [%s] added File %s in Course %s\n",
+                    FORMAT.format(LocalDateTime.now()), teacher.getFullName(), teacher.getLogin(), file.getTitle(),
+                    course.getName()));
 
             writer.flush();
         }
@@ -121,9 +126,11 @@ public class Logger {
 
     public void sendOrder(SendingOrders sender, Order order, Executor executor) {
         User user = (User) sender;
+
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(LOG, true))) {
-            writer.write(FORMAT.format(LocalDateTime.now()) + " - " + user.getClass().getSimpleName() + " " +
-                    user.getLogin() + " send Order " + order.getTitle() + " to Executor " + executor.getLogin() + "\n");
+            writer.write(String.format("%s - %s %s [%s] send Order %s to Executor %s [%s]\n",
+                    FORMAT.format(LocalDateTime.now()), user.getClass().getSimpleName(), user.getFullName(),
+                    user.getLogin(), order.getTitle(), executor.getFullName(), executor.getLogin()));
 
             writer.flush();
         }
@@ -132,22 +139,13 @@ public class Logger {
         }
     }
 
-    public void writeNews(Manager manager, News news) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(LOG, true))) {
-            writer.write(FORMAT.format(LocalDateTime.now()) + " - Manager " + manager.getLogin() +
-                    " added News " + news.getTitle() + "\n");
+    public void writeNews(ManagingNews sender, News news) {
+        User user = (User) sender;
 
-            writer.flush();
-        }
-        catch (IOException e) {
-            System.err.println("Cannot write in writeNews()");
-        }
-    }
-
-    public void writeNews(Teacher teacher, News news) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(LOG, true))) {
-            writer.write(FORMAT.format(LocalDateTime.now()) + " - Teacher " + teacher.getLogin() +
-                    " added News " + news.getTitle() + "\n");
+            writer.write(String.format("%s - %s %s [%s] wrote News %s\n",
+                    FORMAT.format(LocalDateTime.now()), user.getClass().getSimpleName(), user.getFullName(),
+                    user.getLogin(), news.getTitle()));
 
             writer.flush();
         }

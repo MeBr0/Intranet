@@ -80,7 +80,7 @@ public class Marks implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("Marks { attestation1: %.2f, attestation2: %.2f, final: %.2f }",
+        return String.format("Attestation1: %.2f, Attestation2: %.2f, Final: %.2f",
                 attestation1.getScore(), attestation2.getScore(), finale.getScore());
     }
 
