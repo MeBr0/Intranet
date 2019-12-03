@@ -43,5 +43,4 @@ public class CustomHasher {
 
         return builder.toString();
     }
-
 }

@@ -7,10 +7,7 @@ import kz.kbtu.study.Marks;
 import kz.kbtu.study.throwable.DeadlinePassed;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Course implements Serializable {
     private String name;
@@ -146,5 +143,20 @@ public class Course implements Serializable {
     @Override
     public String toString() {
         return String.format("Course { name: %s, creditNumber: %d, teacher: %s", name, creditNumber, teacher);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Course)) return false;
+        Course course = (Course) o;
+        return creditNumber == course.creditNumber &&
+                name.equals(course.name) &&
+                teacher.equals(course.teacher);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, creditNumber, teacher);
     }
 }
