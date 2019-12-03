@@ -35,6 +35,15 @@ public class Message implements Serializable {
         return timestamp;
     }
 
+    public void print() {
+        Employee sender = getSender();
+
+        System.out.println(String.format("Title: %s", title));
+        System.out.println(String.format("Text: %s", text));
+        System.out.println(String.format("Sender: %s [%s]", sender.getFullName(), sender.getLogin()));
+        System.out.println(String.format("Date: %s", timestamp));
+    }
+
     @Override
     public String toString() {
         return "Message{" +

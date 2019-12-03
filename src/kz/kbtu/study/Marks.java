@@ -54,6 +54,12 @@ public class Marks implements Serializable {
         this.finale.setDeadline(deadline);
     }
 
+    public void print() {
+        System.out.println("Attestation1 : " + attestation1.getScore());
+        System.out.println("Attestation2 : " + attestation2.getScore());
+        System.out.println("Final : " + finale.getScore());
+    }
+
     @Override
     public String toString() {
         return String.format("Attestation1: %.2f, Attestation2: %.2f, Final: %.2f",

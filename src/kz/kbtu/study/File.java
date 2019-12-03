@@ -26,6 +26,12 @@ public class File implements Serializable {
         return creator;
     }
 
+    public final void print() {
+        System.out.println(String.format("Title: %s", title));
+        System.out.println(String.format("Text: %s", text));
+        System.out.println(String.format("Created by %s", creator));
+    }
+
     @Override
     public String toString() {
         return String.format("File { title: %s, text: %s, creator: %s }", title, text, creator);

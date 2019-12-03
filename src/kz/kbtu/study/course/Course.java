@@ -137,6 +137,12 @@ public class Course implements Serializable {
         }
     }
 
+    public void print() {
+        System.out.println(String.format("Course name: %s", name));
+        System.out.println(String.format("Credit number: %d", creditNumber));
+        System.out.println(String.format("Teacher: %s [%s]", teacher.getFullName(), teacher.getLogin()));
+    }
+
     @Override
     public String toString() {
         return String.format("Course { name: %s, creditNumber: %d, teacher: %s", name, creditNumber, teacher);

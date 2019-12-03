@@ -24,6 +24,15 @@ public class Order extends Message implements Serializable {
         this.status = status;
     }
 
+    public void print() {
+        Employee sender = getSender();
+
+        System.out.println(String.format("Order: %s [%s]", getTitle(), status));
+        System.out.println(String.format("Text: %s", getText()));;
+        System.out.println(String.format("Sender: %s [%s]", sender.getFullName(), sender.getLogin()));;
+        System.out.println(String.format("Date: %s", getTimestamp()));
+    }
+
     @Override
     public String toString() {
         return "Order{" +

@@ -21,6 +21,15 @@ public class News extends Message implements Serializable {
         return faculty;
     }
 
+    public final void print() {
+        Employee sender = getSender();
+
+        System.out.println(String.format("Title: %s [%s]", getTitle(), faculty));
+        System.out.println(String.format("Text: %s", getText()));
+        System.out.println(String.format("Sender: %s [%s]", sender.getFullName(), sender.getLogin()));
+        System.out.println(String.format("Date: %s", getTimestamp()));
+    }
+
     @Override
     public String toString() {
         return "News{" +

@@ -95,6 +95,16 @@ public class Teacher extends Employee implements ManagingCourses, ManagingNews, 
         }
     }
 
+    public final void print() {
+        System.out.println(String.format("Full name: %s [%s]", getFullName(), getLogin()));
+        System.out.println(String.format("Birth date: %s", getBirthDate()));
+        System.out.println(String.format("Gender: %s", getGender()));
+        System.out.println(String.format("Phone number: %s", getPhoneNumber()));
+        System.out.println(String.format("Email: %s", getEmail()));
+        System.out.println(String.format("Faculty: %s", faculty));
+        System.out.println(String.format("Position: %s", position));
+    }
+
     @Override
     public String toString() {
         return String.format("Teacher { faculty: %s, position: %s, %s }", faculty, position, super.toString());

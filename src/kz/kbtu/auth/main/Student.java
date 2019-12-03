@@ -3,6 +3,7 @@ package kz.kbtu.auth.main;
 import kz.kbtu.auth.base.User;
 import kz.kbtu.auth.type.Degree;
 import kz.kbtu.auth.type.Faculty;
+import kz.kbtu.study.Marks;
 import kz.kbtu.study.course.Course;
 import kz.kbtu.study.course.CourseStatus;
 import kz.kbtu.study.course.ManagingCourses;
@@ -126,6 +127,12 @@ public class Student extends User implements ManagingCourses, Serializable {
         }
 
         return String.format("%s%s%s", yearString, degreeString, builder.toString());
+    }
+
+    public final void print(Marks marks) {
+        System.out.println(String.format("%s [%s] - %.2f : %.2f : %.2f",
+                getFullName(), getLogin(), marks.getAttestation1().getScore(),
+                marks.getAttestation2().getScore(), marks.getFinale().getScore()));
     }
 
     @Override

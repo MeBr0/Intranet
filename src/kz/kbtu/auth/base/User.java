@@ -53,6 +53,14 @@ public abstract class User extends Person implements Serializable {
         return this.login.equals(login) && this.password.equals(hashedPassword);
     }
 
+    public void print() {
+        System.out.println(String.format("Full name: %s [%s]", getFullName(), login));
+        System.out.println(String.format("Birth date: %s", getBirthDate()));
+        System.out.println(String.format("Gender: %s", getGender()));
+        System.out.println(String.format("Phone number: %s", phoneNumber));
+        System.out.println(String.format("Email: %s", email));
+    }
+
     @Override
     public String toString() {
         return String.format("login: %s, %s", login, super.toString());

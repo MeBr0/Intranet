@@ -1,6 +1,5 @@
 package kz.kbtu;
 
-import kz.kbtu.auth.base.Employee;
 import kz.kbtu.auth.base.User;
 import kz.kbtu.auth.main.*;
 import kz.kbtu.auth.type.Degree;
@@ -46,7 +45,6 @@ public class Intranet {
     }
 
     public void begin() {
-//        System.out.println(DATABASE.getUsers());
         printInfo("Welcome to Intranet system!");
 
         int i = 0;
@@ -177,14 +175,14 @@ public class Intranet {
         String lastName = SCANNER.nextLine();
 
         printInfo("Choose faculty of student!");
-        Faculty[] faculties = DATABASE.getFaculties();;
-        printFaculties(faculties);
+        Faculty[] faculties = DATABASE.getFaculties();
+        PRINTER.printFaculties(faculties);
         int index = SCANNER.nextInt();
         Faculty faculty = faculties[index-1];
 
         printInfo("Choose degree of student!");
         Degree[] degrees = DATABASE.getDegrees();
-        printDegrees(degrees);
+        PRINTER.printDegrees(degrees);
         index = SCANNER.nextInt();
         Degree degree = degrees[index-1];
 
@@ -214,7 +212,7 @@ public class Intranet {
 
         printInfo("Choose faculty of manager!");
         Faculty[] faculties = DATABASE.getFaculties();
-        printFaculties(faculties);
+        PRINTER.printFaculties(faculties);
         int index = SCANNER.nextInt();
         Faculty faculty = faculties[index-1];
 
@@ -274,13 +272,13 @@ public class Intranet {
 
         printInfo("Choose faculty of teacher!");
         Faculty[] faculties = DATABASE.getFaculties();
-        printFaculties(faculties);
+        PRINTER.printFaculties(faculties);
         int index = SCANNER.nextInt();
         Faculty faculty = faculties[index-1];
 
         printInfo("Choose position of teacher!");
         TeacherPosition[] positions = DATABASE.getPositions();
-        printPositions(positions);
+        PRINTER.printPositions(positions);
         index = SCANNER.nextInt();
         TeacherPosition position = positions[index-1];
 
@@ -413,9 +411,7 @@ public class Intranet {
                 return;
             }
 
-            for (int i = 0; i < users.size(); ++i) {
-                System.out.println(i+1 + ": " + users.get(i).getFullName() + "[" + users.get(i).getLogin() + "]");
-            }
+            PRINTER.printUsers(users);
 
             printInfo("Choose user!");
 
@@ -431,12 +427,7 @@ public class Intranet {
     }
 
     private void showUser(User user) {
-        System.out.println(String.format("Full name: %s [%s]", user.getFullName(), user.getLogin()));
-        System.out.println(String.format("Birth date: %s", user.getBirthDate()));
-        System.out.println(String.format("Gender: %s", user.getGender()));
-        System.out.println(String.format("Phone number: %s", user.getPhoneNumber()));
-        System.out.println(String.format("Email: %s", user.getEmail()));
-
+        user.print();
         await();
     }
 
@@ -549,9 +540,7 @@ public class Intranet {
                 return;
             }
 
-            for (int i = 0; i < courses.size(); ++i) {
-                System.out.println(i+1 + ". " + courses.get(i).getName());
-            }
+            PRINTER.printCourses(courses);
 
             printInfo("Choose course!");
 
@@ -573,13 +562,13 @@ public class Intranet {
 
         printInfo("Choose faculty!");
         Faculty[] faculties = DATABASE.getFaculties();
-        printFaculties(faculties);
+        PRINTER.printFaculties(faculties);
         int index = SCANNER.nextInt();
         Faculty faculty = faculties[index-1];
 
         printInfo("Choose degree!");
         Degree[] degrees = DATABASE.getDegrees();
-        printDegrees(degrees);
+        PRINTER.printDegrees(degrees);
         index = SCANNER.nextInt();
         Degree degree = degrees[index-1];
 
@@ -656,9 +645,7 @@ public class Intranet {
                 return;
             }
 
-            for (int i = 0; i < courses.size(); ++i) {
-                System.out.println(i+1 + ". " + courses.get(i));
-            }
+            PRINTER.printCourses(courses);
 
             printInfo("Choose course!");
 
@@ -702,10 +689,7 @@ public class Intranet {
 
     private void showMarks(Student student, Course course) {
         Marks marks = course.getMarks().get(student.getLogin());
-
-        System.out.println("Attestation1 : " + marks.getAttestation1().getScore());
-        System.out.println("Attestation2 : " + marks.getAttestation2().getScore());
-        System.out.println("Final : " + marks.getFinale().getScore());
+        marks.print();
     }
 
     /* Register course */
@@ -724,9 +708,7 @@ public class Intranet {
                 return;
             }
 
-            for (int i = 0; i < courses.size(); ++i) {
-                System.out.println(i+1 + ". " + courses.get(i));
-            }
+            PRINTER.printCourses(courses);
 
             printInfo("Choose course to register!");
 
@@ -761,8 +743,7 @@ public class Intranet {
         for (Course course: courses) {
             if (course.getStatus(student.getLogin()) != CourseStatus.FUTURE) {
                 Marks marks = course.getMarks(student.getLogin());
-
-                System.out.println(course.getName() + ": " + marks);
+                student.print(marks);
             }
         }
     }
@@ -809,9 +790,7 @@ public class Intranet {
         List<Course> courses = teacher.getCourses();
 
         while (true) {
-            for (int i = 0; i < courses.size(); ++i) {
-                System.out.println(i+1 + ". " + courses.get(i));
-            }
+            PRINTER.printCourses(courses);
 
             if (courses.size() == 0) {
                 printResult("Empty!");
@@ -888,7 +867,7 @@ public class Intranet {
 
         printInfo("Choose mode of mark!");
         MarkMode[] modes = DATABASE.getMarkModes();
-        printModes(modes);
+        PRINTER.printModes(modes);
         int index = SCANNER.nextInt();
         MarkMode mode = modes[index-1];
 
@@ -993,9 +972,7 @@ public class Intranet {
                 return;
             }
 
-            for (int i = 0; i < orders.size(); ++i) {
-                System.out.println(i+1 + ". " + orders.get(i));
-            }
+            PRINTER.printOrders(orders);
 
             printInfo("Choose order!");
 
@@ -1013,12 +990,7 @@ public class Intranet {
     private void showOrder(Executor executor, Order order) {
         String answer;
 
-        Employee sender = order.getSender();
-
-        System.out.println(String.format("Order: %s [%s]", order.getTitle(), order.getStatus()));
-        System.out.println(String.format("Text: %s", order.getText()));;
-        System.out.println(String.format("Sender: %s [%s]", sender.getFullName(), sender.getLogin()));;
-        System.out.println(String.format("Date: %s", order.getTimestamp()));
+        order.print();
 
         if (order.getStatus() == OrderStatus.NEW) {
             printInfo("This is new order! Do you accept or reject?");
@@ -1088,12 +1060,7 @@ public class Intranet {
 
     /* Show course info */
     private void showCourseInfo(Course course) {
-        Teacher teacher = course.getTeacher();
-
-        System.out.println(String.format("Course name: %s", course.getName()));
-        System.out.println(String.format("Credit number: %d", course.getCreditNumber()));
-        System.out.println(String.format("Teacher: %s [%s]", teacher.getFullName(), teacher.getLogin()));
-
+        course.print();
         await();
     }
 
@@ -1102,9 +1069,7 @@ public class Intranet {
         List<File> files = course.getFiles();
 
         while (true) {
-            for (int i = 0; i < files.size(); ++i) {
-                System.out.println(i+1 + ". " + files.get(i).getTitle());
-            }
+            PRINTER.printFiles(files);
 
             if (files.size() == 0) {
                 printResult("Empty!");
@@ -1125,23 +1090,13 @@ public class Intranet {
     }
 
     private void showFile(File file) {
-        System.out.println(String.format("Title: %s", file.getTitle()));
-        System.out.println(String.format("Text: %s", file.getText()));
-        System.out.println(String.format("Created by %s", file.getCreator()));
-
+        file.print();
         await();
     }
 
     /* Show teacher info */
     private void showTeacherInfo(Teacher teacher) {
-        System.out.println(String.format("Full name: %s [%s]", teacher.getFullName(), teacher.getLogin()));
-        System.out.println(String.format("Birth date: %s", teacher.getBirthDate()));
-        System.out.println(String.format("Gender: %s", teacher.getGender()));
-        System.out.println(String.format("Phone number: %s", teacher.getPhoneNumber()));
-        System.out.println(String.format("Email: %s", teacher.getEmail()));
-        System.out.println(String.format("Faculty: %s", teacher.getFaculty()));
-        System.out.println(String.format("Position: %s", teacher.getPosition()));
-
+        teacher.print();
         await();
     }
 
@@ -1157,10 +1112,7 @@ public class Intranet {
         for (Student student: students) {
             if (course.getStatus(student.getLogin()) == CourseStatus.CURRENT) {
                 Marks marks = course.getMarks(student.getLogin());
-
-                System.out.println(String.format("%s [%s] - %.2f : %.2f : %.2f",
-                        student.getFullName(), student.getLogin(), marks.getAttestation1().getScore(),
-                        marks.getAttestation2().getScore(), marks.getFinale().getScore()));
+                student.print(marks);
             }
         }
     }
@@ -1175,9 +1127,7 @@ public class Intranet {
                 return;
             }
 
-            for (int i = 0; i < messages.size(); ++i) {
-                System.out.println(i+1 + ". " + messages.get(i).getTitle());
-            }
+            PRINTER.printMessages(messages);
 
             printInfo("Choose message!");
 
@@ -1193,13 +1143,7 @@ public class Intranet {
     }
 
     private void showMessage(Message message) {
-        Employee sender = message.getSender();
-
-        System.out.println(String.format("Title: %s", message.getTitle()));
-        System.out.println(String.format("Text: %s", message.getText()));
-        System.out.println(String.format("Sender: %s [%s]", sender.getFullName(), sender.getLogin()));
-        System.out.println(String.format("Date: %s", message.getTimestamp()));
-
+        message.print();
         await();
     }
 
@@ -1238,9 +1182,7 @@ public class Intranet {
                 return;
             }
 
-            for (int i = 0; i < newses.size(); ++i) {
-                System.out.println(i+1 + ": " + newses.get(i).getTitle());
-            }
+            PRINTER.printNewses(newses);
 
             printInfo("Choose news!");
 
@@ -1256,13 +1198,7 @@ public class Intranet {
     }
 
     private void showNews(News news) {
-        Employee sender = news.getSender();
-
-        System.out.println(String.format("Title: %s [%s]", news.getTitle(), news.getFaculty()));
-        System.out.println(String.format("Text: %s", news.getText()));
-        System.out.println(String.format("Sender: %s [%s]", sender.getFullName(), sender.getLogin()));
-        System.out.println(String.format("Date: %s", news.getTimestamp()));
-
+        news.print();
         await();
     }
 
@@ -1331,6 +1267,7 @@ public class Intranet {
 
     }
 
+    /* Await for pressing BACK button */
     private void await() {
         String answer = "";
 
@@ -1339,6 +1276,7 @@ public class Intranet {
         }
     }
 
+    /* Printer methods wrapper */
     private void printInfo(String info) {
         PRINTER.printInfo(info);
     }
@@ -1353,21 +1291,5 @@ public class Intranet {
 
     private void printOptions(String[] options) {
         PRINTER.printOptions(options);
-    }
-
-    private void printFaculties(Faculty[] faculties) {
-        PRINTER.printFaculties(faculties);
-    }
-
-    private void printDegrees(Degree[] degrees) {
-        PRINTER.printDegrees(degrees);
-    }
-
-    private void printPositions(TeacherPosition[] positions) {
-        PRINTER.printPositions(positions);
-    }
-
-    private void printModes(MarkMode[] modes) {
-        PRINTER.printModes(modes);
     }
 }
