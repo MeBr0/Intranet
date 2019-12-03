@@ -13,6 +13,7 @@ import kz.kbtu.study.course.Course;
 import kz.kbtu.study.course.CourseStatus;
 import kz.kbtu.study.course.ManagingCourses;
 import kz.kbtu.study.course.MarkMode;
+import kz.kbtu.study.throwable.DeadlinePassed;
 import kz.kbtu.study.throwable.NotCurrentCourse;
 
 import java.io.Serializable;
@@ -83,7 +84,9 @@ public class Teacher extends Employee implements ManagingCourses, ManagingNews, 
         return new File(title, text, getFullName());
     }
 
-    public void putMark(String login, Course course, MarkMode mode, double score) throws NotCurrentCourse {
+    public void putMark(String login, Course course, MarkMode mode, double score)
+            throws NotCurrentCourse, DeadlinePassed {
+
         if (course.getStatus(login) == CourseStatus.CURRENT) {
             course.putMarks(login, mode, score);
         }

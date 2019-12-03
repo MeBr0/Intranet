@@ -18,6 +18,8 @@ import kz.kbtu.study.Marks;
 import kz.kbtu.study.course.Course;
 import kz.kbtu.study.course.CourseStatus;
 import kz.kbtu.study.course.MarkMode;
+import kz.kbtu.study.throwable.CreditOverflow;
+import kz.kbtu.study.throwable.DeadlinePassed;
 import kz.kbtu.study.throwable.NotCurrentCourse;
 import kz.kbtu.util.Logger;
 import kz.kbtu.util.Printer;
@@ -590,10 +592,16 @@ public class Intranet {
         List<Student> students = DATABASE.getStudents(yearOfStudy, faculty, degree);
 
         if (course != null) {
-            manager.offerCourse(course, students);
+            try {
+                manager.offerCourse(course, students);
 
-            LOGGER.offerCourse(manager, course, yearOfStudy, faculty, degree);
-            printResult("Course offered!");
+                LOGGER.offerCourse(manager, course, yearOfStudy, faculty, degree);
+                printResult("Course offered!");
+            }
+            catch (CreditOverflow e) {
+                System.err.println(e.getMessage());
+                LOGGER.writeError(e);
+            }
         }
         else {
             printError("Course not found!");
@@ -895,8 +903,9 @@ public class Intranet {
 
             DATABASE.save();
         }
-        catch (NotCurrentCourse e) {
+        catch (NotCurrentCourse | DeadlinePassed e) {
             printError(e.getMessage());
+            LOGGER.writeError(e);
         }
     }
 

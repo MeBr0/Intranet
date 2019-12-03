@@ -22,16 +22,8 @@ public class Marks implements Serializable {
         return attestation1;
     }
 
-    public boolean updateAttestation1(double delta) {
-        try {
-            this.attestation1.updateScore(delta);
-
-            return true;
-        }
-        catch (DeadlinePassed e) {
-            // TODO: logging
-            return false;
-        }
+    public void updateAttestation1(double delta) throws DeadlinePassed {
+        this.attestation1.updateScore(delta);
     }
 
     public void updateAttestation1(Date deadline) {
@@ -42,16 +34,8 @@ public class Marks implements Serializable {
         return attestation2;
     }
 
-    public boolean updateAttestation2(double delta) {
-        try {
-            this.attestation2.updateScore(delta);
-
-            return true;
-        }
-        catch (DeadlinePassed e) {
-            // TODO: logging
-            return false;
-        }
+    public void updateAttestation2(double delta) throws DeadlinePassed {
+        this.attestation2.updateScore(delta);
     }
 
     public void updateAttestation2(Date deadline) {
@@ -62,16 +46,8 @@ public class Marks implements Serializable {
         return finale;
     }
 
-    public boolean updateFinale(double delta) {
-        try {
-            this.finale.updateScore(delta);
-
-            return true;
-        }
-        catch (DeadlinePassed e) {
-            // TODO: logging
-            return false;
-        }
+    public void updateFinale(double delta) throws DeadlinePassed {
+        this.finale.updateScore(delta);
     }
 
     public void updateFinale(Date deadline) {

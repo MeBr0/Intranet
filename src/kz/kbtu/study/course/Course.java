@@ -101,22 +101,18 @@ public class Course implements Serializable {
         return marks.get(login);
     }
 
-    public void putMarks(String login, MarkMode mode, double score) {
-        try {
-            switch (mode) {
-                case ATTESTATION1:
-                    getMarks(login).getAttestation1().updateScore(score);
-                    break;
-                case ATTESTATION2:
-                    getMarks(login).getAttestation2().updateScore(score);
-                    break;
-                case FINAL:
-                    getMarks(login).getFinale().updateScore(score);
-                    break;
-            }
-        }
-        catch (DeadlinePassed deadlinePassed) {
-            System.err.println(deadlinePassed.getMessage());
+    public void putMarks(String login, MarkMode mode, double score) throws DeadlinePassed {
+        switch (mode) {
+            case ATTESTATION1:
+                getMarks(login).updateAttestation1(score);
+                break;
+            case ATTESTATION2:
+                getMarks(login).updateAttestation2(score);
+                break;
+            case FINAL:
+                getMarks(login).updateFinale(score);
+                updateStatus(login, CourseStatus.FINISHED);
+                break;
         }
     }
 

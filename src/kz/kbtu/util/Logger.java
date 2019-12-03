@@ -153,4 +153,18 @@ public class Logger {
             System.err.println("Cannot write in writeNews()");
         }
     }
+
+    public void writeError(Exception exception) {
+        String exceptionName = exception.getClass().getSimpleName();
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(LOG, true))) {
+            writer.write(String.format("%s - %s %s\n",
+                    FORMAT.format(LocalDateTime.now()), exceptionName, exception.getMessage()));
+
+            writer.flush();
+        }
+        catch (IOException e) {
+            System.err.println("Cannot write in writeError()");
+        }
+    }
 }

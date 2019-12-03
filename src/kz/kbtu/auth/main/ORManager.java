@@ -27,19 +27,13 @@ public class ORManager extends Employee implements SendingOrders, Serializable {
         return course;
     }
 
-    public void offerCourse(Course course, List<Student> students) {
-        try {
-            for (Student student: students) {
+    public void offerCourse(Course course, List<Student> students) throws CreditOverflow {
+        for (Student student: students) {
 
-//                System.out.println(student);
-                course.addStudent(student);
-                course.updateStatus(student.getLogin(), CourseStatus.FUTURE);
+            course.addStudent(student);
+            course.updateStatus(student.getLogin(), CourseStatus.FUTURE);
 
-                student.addCourse(course);
-            }
-        }
-        catch (CreditOverflow e) {
-            System.err.println("Cannot offer course!");
+            student.addCourse(course);
         }
     }
 
