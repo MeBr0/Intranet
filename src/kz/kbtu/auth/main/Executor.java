@@ -41,6 +41,12 @@ public class Executor extends Employee implements ManagingOrders, Serializable {
     @Override
     public void changeOrderStatus(Order order, OrderStatus status) {
         order.setStatus(status);
+
+        if (status == OrderStatus.FINISHED) {
+            Employee sender = order.getSender();
+
+            sendMessage(order.getTitle(), "Order finished!", sender);
+        }
     }
 
     @Override
