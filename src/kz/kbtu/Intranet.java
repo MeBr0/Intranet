@@ -10,6 +10,7 @@ import kz.kbtu.communication.message.Messaging;
 import kz.kbtu.communication.news.News;
 import kz.kbtu.communication.order.Order;
 import kz.kbtu.communication.order.OrderStatus;
+import kz.kbtu.communication.order.SendingOrders;
 import kz.kbtu.study.File;
 import kz.kbtu.study.Marks;
 import kz.kbtu.study.course.Course;
@@ -448,10 +449,11 @@ public class Intranet {
             System.out.println("2. Remove course");
             System.out.println("3. Show course");
             System.out.println("4. Offer course");
-            System.out.println("5. Show messages");
-            System.out.println("6. Write message");
-            System.out.println("7. News");
-            System.out.println("8. Change password");
+            System.out.println("5. Write order");
+            System.out.println("6. Show messages");
+            System.out.println("7. Write message");
+            System.out.println("8. News");
+            System.out.println("9. Change password");
 
             answer = SCANNER.nextLine();
 
@@ -469,15 +471,18 @@ public class Intranet {
                     offerCourse(manager);
                     break;
                 case "5":
-                    showMessages(manager);
+                    sendOrder(manager);
                     break;
                 case "6":
-                    writeMessage(manager);
+                    showMessages(manager);
                     break;
                 case "7":
-                    showNewses();
+                    writeMessage(manager);
                     break;
                 case "8":
+                    showNewses();
+                    break;
+                case "9":
                     changePassword(manager);
                     break;
             }
@@ -880,31 +885,6 @@ public class Intranet {
 
     }
 
-    /* Send order */
-    private void sendOrder(Teacher teacher) {
-        System.out.println("Type title of order!");
-        String title = SCANNER.nextLine();
-
-        System.out.println("Type text of order!");
-        String text = SCANNER.nextLine();
-
-        System.out.println("Type login of executor!");
-        String login = SCANNER.nextLine();
-
-        User user = DATABASE.getUser(login);
-
-        if (user instanceof Executor) {
-            Executor executor = (Executor) user;
-            Order order = teacher.sendOrder(title, text, executor);
-            System.out.println("Order sent!");
-            LOGGER.sendOrder(teacher, order, executor);
-            DATABASE.save();
-        }
-        else {
-            System.err.println("Cannot create Order!");
-        }
-    }
-
     /* Write news */
     private void writeNews(Teacher teacher) {
         System.out.println("Type title of news!");
@@ -926,10 +906,11 @@ public class Intranet {
 
         while (!answer.equals(BACK)) {
             System.out.println("1. Add news");
-            System.out.println("2. Show messages");
-            System.out.println("3. Write message");
-            System.out.println("4. News");
-            System.out.println("5. Change password");
+            System.out.println("2. Write order");
+            System.out.println("3. Show messages");
+            System.out.println("4. Write message");
+            System.out.println("5. News");
+            System.out.println("6. Change password");
 
             answer = SCANNER.nextLine();
 
@@ -938,15 +919,18 @@ public class Intranet {
                     writeNews(manager);
                     break;
                 case "2":
-                    showMessages(manager);
+                    sendOrder(manager);
                     break;
                 case "3":
-                    writeMessage(manager);
+                    showMessages(manager);
                     break;
                 case "4":
-                    showNewses();
+                    writeMessage(manager);
                     break;
                 case "5":
+                    showNewses();
+                    break;
+                case "6":
                     changePassword(manager);
                     break;
             }
@@ -1269,6 +1253,31 @@ public class Intranet {
         }
         else {
             System.err.println("Cannot change password!");
+        }
+    }
+
+    /* Send order */
+    private void sendOrder(SendingOrders sender) {
+        System.out.println("Type title of order!");
+        String title = SCANNER.nextLine();
+
+        System.out.println("Type text of order!");
+        String text = SCANNER.nextLine();
+
+        System.out.println("Type login of executor!");
+        String login = SCANNER.nextLine();
+
+        User user = DATABASE.getUser(login);
+
+        if (user instanceof Executor) {
+            Executor executor = (Executor) user;
+            Order order = sender.sendOrder(title, text, executor);
+            System.out.println("Order sent!");
+            LOGGER.sendOrder(sender, order, executor);
+            DATABASE.save();
+        }
+        else {
+            System.err.println("Cannot create Order!");
         }
     }
 }

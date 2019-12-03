@@ -3,7 +3,6 @@ package kz.kbtu.auth.main;
 import kz.kbtu.auth.base.Employee;
 import kz.kbtu.auth.type.Faculty;
 import kz.kbtu.auth.type.TeacherPosition;
-import kz.kbtu.communication.message.Messaging;
 import kz.kbtu.communication.news.ManagingNews;
 import kz.kbtu.communication.news.News;
 import kz.kbtu.communication.order.SendingOrders;
@@ -19,7 +18,7 @@ import kz.kbtu.study.throwable.NotCurrentCourse;
 import java.io.Serializable;
 import java.util.*;
 
-public class Teacher extends Employee implements ManagingCourses, ManagingNews, Serializable, SendingOrders {
+public class Teacher extends Employee implements ManagingCourses, ManagingNews, SendingOrders, Serializable {
     private Faculty faculty;
     private TeacherPosition position;
     private List<Course> courses;

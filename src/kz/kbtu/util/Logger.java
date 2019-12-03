@@ -6,6 +6,7 @@ import kz.kbtu.auth.type.Degree;
 import kz.kbtu.auth.type.Faculty;
 import kz.kbtu.communication.news.News;
 import kz.kbtu.communication.order.Order;
+import kz.kbtu.communication.order.SendingOrders;
 import kz.kbtu.study.File;
 import kz.kbtu.study.course.Course;
 
@@ -118,10 +119,11 @@ public class Logger {
         }
     }
 
-    public void sendOrder(Teacher teacher, Order order, Executor executor) {
+    public void sendOrder(SendingOrders sender, Order order, Executor executor) {
+        User user = (User) sender;
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(LOG, true))) {
-            writer.write(FORMAT.format(LocalDateTime.now()) + " - Teacher " + teacher.getLogin() +
-                    " send Order " + order.getTitle() + " to Executor " + executor.getLogin() + "\n");
+            writer.write(FORMAT.format(LocalDateTime.now()) + " - " + user.getClass().getSimpleName() + " " +
+                    user.getLogin() + " send Order " + order.getTitle() + " to Executor " + executor.getLogin() + "\n");
 
             writer.flush();
         }

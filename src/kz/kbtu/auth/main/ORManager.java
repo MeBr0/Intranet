@@ -8,11 +8,12 @@ import kz.kbtu.study.course.Course;
 import kz.kbtu.study.course.CourseStatus;
 import kz.kbtu.study.throwable.CreditOverflow;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class ORManager extends Employee implements SendingOrders {
+public class ORManager extends Employee implements SendingOrders, Serializable {
 
     public ORManager(int salary, String login, String firstName, String lastName) {
         super(salary, login, firstName, lastName);
